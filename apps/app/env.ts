@@ -10,6 +10,7 @@ import { keys as observability } from '@repo/observability/keys';
 import { keys as security } from '@repo/security/keys';
 import { keys as webhooks } from '@repo/webhooks/keys';
 import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
 
 export const env = createEnv({
   extends: [
@@ -25,7 +26,11 @@ export const env = createEnv({
     security(),
     webhooks(),
   ],
-  server: {},
+  server: {
+    ENV: z.string().min(1),
+  },
   client: {},
-  runtimeEnv: {},
+  runtimeEnv: {
+    ENV: process.env.ENV,
+  },
 });

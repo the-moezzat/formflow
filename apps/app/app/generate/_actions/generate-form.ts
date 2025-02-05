@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 import { encodeFormData } from '@/utils/formEncoder';
 import { redirect } from 'next/navigation';
+import { env } from '@/env';
 
 type FormState = {
   prompt: string;
@@ -30,7 +31,7 @@ export default async function generateForm(_: FormState, data: FormData) {
   });
 
   const object = await generateObject({
-    model: models.chat,
+    model: env.ENV === 'DEV' ? models.local : models.chat,
     messages: [
       {
         role: 'user',
