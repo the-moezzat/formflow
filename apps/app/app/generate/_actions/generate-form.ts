@@ -45,7 +45,7 @@ export default async function generateForm(_: FormState, data: FormData) {
   log.debug('Form finish reason', { finishReason: object.finishReason });
   log.debug('Form Object', object.object);
 
-  // redirect(`/form-editor?form=${encodeFormData(object.object)}`);
+  redirect(`/form-editor?form=${encodeFormData(object.object)}`);
 
   return {
     prompt,
