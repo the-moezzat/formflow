@@ -1,8 +1,7 @@
-import { decodeJsonData } from '@/utils/formEncoder';
 import Toolbar from './_components/editor/toolbar';
-import type { GeneratedForm } from '@repo/schema-types/types';
 import FieldsView from './_components/editor/fields-view';
 import FormPreview from './_components/editor/form-preview';
+import { Suspense } from 'react';
 
 // Page props type for searchParams
 type PageProps = {
@@ -12,17 +11,21 @@ type PageProps = {
   }>;
 };
 
-async function Page({ searchParams }: PageProps) {
-  const encodedForm = (await searchParams).form;
-  const form = decodeJsonData<GeneratedForm>(encodedForm);
+function Page() {
+  // const encodedForm = (await searchParams).form;
+  // const form = decodeJsonData<GeneratedForm>(encodedForm);
 
   return (
     <div className="grid h-[calc(100vh-74px)] grid-cols-[5fr,14fr,5fr] grid-rows-[auto,1fr] gap-4 overflow-y-scroll">
       <div className="col-start-1 row-span-2 rounded-xl bg-accent">
-        <FieldsView />
+        <Suspense>
+          <FieldsView />
+        </Suspense>
       </div>
       <Toolbar />
-      <FormPreview />
+      <Suspense>
+        <FormPreview />
+      </Suspense>
       <div className="row-span-2 rounded-xl bg-blue-300">
         {/* <FormViewDnd /> */}
       </div>

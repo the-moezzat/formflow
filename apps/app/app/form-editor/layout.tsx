@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import EditorHeader from './_components/editor-header';
 
 function Layout({
@@ -8,7 +8,9 @@ function Layout({
 }) {
   return (
     <main className="grid h-dvh grid-rows-[40px,1fr] gap-4 p-2">
-      <EditorHeader />
+      <Suspense>
+        <EditorHeader />
+      </Suspense>
       {children}
     </main>
   );
