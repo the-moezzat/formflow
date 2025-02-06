@@ -1,0 +1,12 @@
+{
+  "name": "@repo/schema-types",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "^5.7.3"
+  }
+}

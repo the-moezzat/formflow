@@ -7,7 +7,7 @@ const plusRegex = /\+/g;
 const slashRegex = /\//g;
 const equalsRegex = /=+$/;
 
-export const encodeFormData = (formData: object): string => {
+export const encodeJsonData = (formData: object): string => {
   try {
     // 1. Convert to JSON string
     const jsonString = JSON.stringify(formData);
@@ -29,12 +29,12 @@ export const encodeFormData = (formData: object): string => {
       .replace(slashRegex, '_')
       .replace(equalsRegex, '');
   } catch (error) {
-    log.error('Error encoding form data:', {error});
+    log.error('Error encoding form data:', { error });
     throw new Error('Failed to encode form data');
   }
 };
 
-export const decodeFormData = (encodedData: string): object => {
+export function decodeJsonData<T>(encodedData: string): T {
   try {
     // 1. Restore Base64 padding
     const base64 = encodedData.replace(/-/g, '+').replace(/_/g, '/');
@@ -57,22 +57,25 @@ export const decodeFormData = (encodedData: string): object => {
     const jsonString = new TextDecoder().decode(decompressed);
     return JSON.parse(jsonString);
   } catch (error) {
-    log.error('Error decoding form data:', {error});
+    log.error('Error decoding form data:', { error });
     throw new Error('Failed to decode form data');
   }
-};
+}
 
 // Usage example to see size difference
 export const testCompression = (formData: object) => {
   const originalJSON = JSON.stringify(formData);
-  const encoded = encodeFormData(formData);
+  const encoded = encodeJsonData(formData);
 
   console.log('Original length:', originalJSON.length);
   console.log('Encoded length:', encoded.length);
-  console.log('Compression ratio:', (encoded.length / originalJSON.length) * 100);
+  console.log(
+    'Compression ratio:',
+    (encoded.length / originalJSON.length) * 100
+  );
 
   // Test roundtrip
-  const decoded = decodeFormData(encoded);
+  const decoded = decodeJsonData(encoded);
   console.log(
     'Roundtrip successful:',
     JSON.stringify(decoded) === originalJSON
