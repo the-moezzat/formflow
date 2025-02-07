@@ -9,9 +9,12 @@ export default function ShortTextInput({
   const id = useId();
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}> {formField.label} </Label>
+      <Label htmlFor={id} required={formField.required}>
+        {formField.label}
+      </Label>
       <Input
         id={id}
+        name={formField.label}
         placeholder={formField.placeholder}
         required={formField.required}
       />

@@ -34,9 +34,13 @@ export default function LongTextInput({ formField }: { formField: FormField }) {
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}> {formField.label}</Label>
+      <Label htmlFor={id} required={formField.required}>
+        {' '}
+        {formField.label}
+      </Label>
       <Textarea
         id={id}
+        name={formField.label}
         placeholder={formField.placeholder}
         ref={textareaRef}
         onChange={handleInput}

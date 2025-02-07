@@ -4,14 +4,19 @@ import LongTextInput from '@repo/design-system/components/form-components/long-t
 import PhoneInput from '@repo/design-system/components/form-components/phone-input';
 import ShortTextInput from '@repo/design-system/components/form-components/short-text-input';
 import type { FormField } from '@repo/schema-types/types';
+import { Button } from '@repo/design-system/components/ui/button';
+import { formSubmit } from '../_actions/form-submit';
 
 export function FieldsMapping(fields: FormField[]) {
-  return fields.map((field) => {
-    return getFiledComponent(field);
-  });
+  return (
+    <form className="space-y-4" action={formSubmit}>
+      {fields.map((field) => getFieldComponent(field))}
+      <Button type="submit">Submit</Button>
+    </form>
+  );
 }
 
-function getFiledComponent(field: FormField) {
+function getFieldComponent(field: FormField) {
   switch (field.type) {
     case 'text':
       return <ShortTextInput formField={field} key={field.label} />;

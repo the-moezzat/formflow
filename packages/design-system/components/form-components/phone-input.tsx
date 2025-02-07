@@ -16,7 +16,9 @@ export default function PhoneInput({ formField }: { formField: FormField }) {
 
   return (
     <div className="space-y-2" dir="ltr">
-      <Label htmlFor={id}>{formField.label}</Label>
+      <Label htmlFor={id} required={formField.required}>
+        {formField.label}
+      </Label>
       <RPNInput.default
         className="flex rounded-lg shadow-black/5 shadow-sm"
         international
@@ -24,6 +26,7 @@ export default function PhoneInput({ formField }: { formField: FormField }) {
         countrySelectComponent={CountrySelect}
         inputComponent={PhoneInputComp}
         id={id}
+        name={formField.label}
         placeholder={formField.placeholder}
         value={value}
         required={formField.required}

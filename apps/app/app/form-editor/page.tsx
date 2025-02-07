@@ -16,7 +16,7 @@ function Page() {
   // const form = decodeJsonData<GeneratedForm>(encodedForm);
 
   return (
-    <div className="grid h-[calc(100vh-74px)] grid-cols-[5fr,14fr,5fr] grid-rows-[auto,1fr] gap-4 overflow-y-scroll">
+    <div className="grid h-[calc(100vh-74px)] grid-cols-[4fr,16fr,4fr] grid-rows-[auto,1fr] gap-4 overflow-y-scroll">
       <div className="col-start-1 row-span-2 rounded-xl bg-accent">
         <Suspense>
           <FieldsView />
@@ -26,7 +26,7 @@ function Page() {
       <Suspense>
         <FormPreview />
       </Suspense>
-      <div className="row-span-2 rounded-xl bg-blue-300">
+      <div className="row-span-2 rounded-xl bg-accent">
         {/* <FormViewDnd /> */}
       </div>
     </div>

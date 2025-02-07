@@ -8,10 +8,13 @@ export default function EmailInput({ formField }: { formField: FormField }) {
   const id = useId();
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>{formField.label}</Label>
+      <Label htmlFor={id} required={formField.required}>
+        {formField.label}
+      </Label>
       <div className="relative">
         <Input
           id={id}
+          name={formField.label}
           className="peer pe-9"
           required={formField.required}
           placeholder={formField.placeholder}

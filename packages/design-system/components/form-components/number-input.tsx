@@ -1,13 +1,8 @@
 'use client';
-import {
-  Button,
-  Group,
-  Input,
-  Label,
-  NumberField,
-} from 'react-aria-components';
+import { Button, Group, Input, NumberField } from 'react-aria-components';
 import { ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import type { FormField } from '@repo/schema-types/types';
+import { Label } from '../ui/label';
 
 export default function NumberInput({ formField }: { formField: FormField }) {
   return (
@@ -19,7 +14,10 @@ export default function NumberInput({ formField }: { formField: FormField }) {
       }}
     >
       <div className="space-y-2">
-        <Label className="font-medium text-foreground text-sm">
+        <Label
+          className="font-medium text-foreground text-sm"
+          required={formField.required}
+        >
           {formField.label}
         </Label>
         <Group className="relative inline-flex h-9 w-full items-center overflow-hidden whitespace-nowrap rounded-lg border border-input text-sm shadow-black/5 shadow-sm transition-shadow data-[focus-within]:border-ring data-[disabled]:opacity-50 data-[focus-within]:outline-none data-[focus-within]:ring-ring/20">
@@ -27,6 +25,7 @@ export default function NumberInput({ formField }: { formField: FormField }) {
             className="flex-1 bg-background px-3 py-2 text-foreground tabular-nums focus:outline-none"
             required={formField.required}
             placeholder={formField.placeholder}
+            name={formField.label}
           />
           <div className="flex h-[calc(100%+2px)] flex-col">
             <Button
