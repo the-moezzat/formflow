@@ -1,12 +1,20 @@
 'use client';
-
-import { Label } from '@repo/design-system/components/ui/label';
 import { Textarea } from '@repo/design-system/components/ui/textarea';
 import type { FormField } from '@repo/schema-types/types';
-import { type ChangeEvent, useId, useRef } from 'react';
+import { type ChangeEvent, useRef } from 'react';
+import type { ControllerRenderProps } from 'react-hook-form';
 
-export default function LongTextInput({ formField }: { formField: FormField }) {
-  const id = useId();
+export default function LongTextInput({
+  formField,
+  ...props
+}: { formField: FormField }) {
+  const controller = props as ControllerRenderProps<
+    {
+      [x: string]: string | number;
+    },
+    string
+  >;
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const defaultRows = 4;
   const maxRows = 10; // You can set a max number of rows
@@ -33,22 +41,14 @@ export default function LongTextInput({ formField }: { formField: FormField }) {
   };
 
   return (
-    <div className="space-y-2">
-      <Label htmlFor={id} required={formField.required}>
-        {' '}
-        {formField.label}
-      </Label>
-      <Textarea
-        id={id}
-        name={formField.label}
-        placeholder={formField.placeholder}
-        ref={textareaRef}
-        onChange={handleInput}
-        rows={defaultRows}
-        required={formField.required}
-        minRows={4}
-        className="min-h-[none] resize-none"
-      />
-    </div>
+    <Textarea
+      placeholder={formField.placeholder}
+      // onChange={handleInput}
+      rows={defaultRows}
+      required={formField.required}
+      minRows={4}
+      className="min-h-[none] resize-none"
+      {...controller}
+    />
   );
 }

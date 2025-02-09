@@ -2,37 +2,36 @@
 
 import { ChevronDown, Phone } from 'lucide-react';
 import type React from 'react';
-import { forwardRef, useId, useState } from 'react';
+import { forwardRef } from 'react';
 import * as RPNInput from 'react-phone-number-input';
 import flags from 'react-phone-number-input/flags';
-import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { cn } from '@repo/design-system/lib/utils';
 import type { FormField } from '@repo/schema-types/types';
+import type { ControllerRenderProps } from 'react-hook-form';
 
-export default function PhoneInput({ formField }: { formField: FormField }) {
-  const id = useId();
-  const [value, setValue] = useState('');
-
+export default function PhoneInput({
+  formField,
+  ...props
+}: { formField: FormField }) {
+  const controller = props as ControllerRenderProps<
+    {
+      [x: string]: string | number;
+    },
+    string
+  >;
   return (
-    <div className="space-y-2" dir="ltr">
-      <Label htmlFor={id} required={formField.required}>
-        {formField.label}
-      </Label>
-      <RPNInput.default
-        className="flex rounded-lg shadow-black/5 shadow-sm"
-        international
-        flagComponent={FlagComponent}
-        countrySelectComponent={CountrySelect}
-        inputComponent={PhoneInputComp}
-        id={id}
-        name={formField.label}
-        placeholder={formField.placeholder}
-        value={value}
-        required={formField.required}
-        onChange={(newValue) => setValue(newValue ?? '')}
-      />
-    </div>
+    <RPNInput.default
+      className="flex rounded-lg shadow-black/5 shadow-sm"
+      international
+      flagComponent={FlagComponent}
+      countrySelectComponent={CountrySelect}
+      inputComponent={PhoneInputComp}
+      placeholder={formField.placeholder}
+      required={formField.required}
+      {...controller}
+      value={String(controller.value)}
+    />
   );
 }
 

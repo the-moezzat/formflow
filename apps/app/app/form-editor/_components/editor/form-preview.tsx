@@ -1,8 +1,8 @@
 'use client';
-import { FieldsMapping } from '../../_utils/fields-mapping';
+import FormBuilder from '@repo/design-system/components/form-builder';
 import { useFormData } from '../../_hooks/use-form-data';
 
-function FormPreview() {
+function FormPreviewSection() {
   const form = useFormData();
   //   const [form, _] = useQueryState('form');
 
@@ -12,9 +12,9 @@ function FormPreview() {
         <h1 className="font-bold text-2xl">{form.title}</h1>
         <p className="text-sm">{form.descriptions}</p>
       </header>
-      {FieldsMapping(form.fields)}
+      <FormBuilder fields={form.fields} />
     </section>
   );
 }
 
-export default FormPreview;
+export default FormPreviewSection;

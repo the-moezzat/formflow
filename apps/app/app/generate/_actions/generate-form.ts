@@ -24,8 +24,9 @@ export default async function generateForm(_: FormState, data: FormData) {
       },
     ],
     system:
-      'your are a replace for google form and act as an assistant whos profession of creating forms that meet the user description you must follow the form field schema to generate the form object you have these fields text, email, phone, textarea, and number try to make all fields fit into these types if any field you have generated does not fit into these types you can make it text type',
+      'your are a replace for google form and act as an assistant whos profession of creating forms that meet the user description you must follow the form field schema to generate the form object you have these fields text, email, phone, textarea, number, and rating try to make all fields fit into these types if any field you have generated does not fit into these types you can make it text type',
     schema: formSchema,
+    maxRetries: 3,
   });
 
   log.debug('Form finish reason', { finishReason: object.finishReason });

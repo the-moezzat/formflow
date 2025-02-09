@@ -8,6 +8,7 @@ import {
   Accessibility,
   Languages,
   Settings,
+  WandSparkles,
 } from 'lucide-react';
 
 function Toolbar() {
@@ -40,6 +41,10 @@ function Toolbar() {
       </Button>
       <Button variant="ghost" size={'icon'} className="hover:bg-neutral-200">
         <Settings />
+      </Button>
+      <Button variant="outline" className="ml-auto hover:bg-neutral-200">
+        <WandSparkles />
+        Edit with AI
       </Button>
     </div>
   );
