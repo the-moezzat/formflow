@@ -17,7 +17,7 @@ export default async function generateForm(_: FormState, data: FormData) {
 
   const object = await generateObject({
     // model: models.google,
-    model: env.ENV === 'DEV' ? models.local : models.google,
+    model: env.ENV === 'DEV' ? models.local : models.chat,
     messages: [
       {
         role: 'user',
