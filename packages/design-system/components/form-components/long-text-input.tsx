@@ -43,9 +43,7 @@ export default function LongTextInput({
   return (
     <Textarea
       placeholder={formField.placeholder}
-      // onChange={handleInput}
       rows={defaultRows}
-      required={formField.required}
       minRows={4}
       className="min-h-[none] resize-none"
       {...controller}

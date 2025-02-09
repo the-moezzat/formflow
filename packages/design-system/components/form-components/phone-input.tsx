@@ -10,6 +10,8 @@ import { cn } from '@repo/design-system/lib/utils';
 import type { FormField } from '@repo/schema-types/types';
 import type { ControllerRenderProps } from 'react-hook-form';
 
+type PhoneInputValue = RPNInput.Value;
+
 export default function PhoneInput({
   formField,
   ...props
@@ -28,9 +30,8 @@ export default function PhoneInput({
       countrySelectComponent={CountrySelect}
       inputComponent={PhoneInputComp}
       placeholder={formField.placeholder}
-      required={formField.required}
       {...controller}
-      value={String(controller.value)}
+      value={controller.value as PhoneInputValue}
     />
   );
 }

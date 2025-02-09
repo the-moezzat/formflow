@@ -5,7 +5,8 @@ import { useFormData } from '../../_hooks/use-form-data';
 import type { FormField } from '@repo/schema-types/types';
 import { useQueryState } from 'nuqs';
 import { encodeJsonData } from '@/utils/formEncoder';
-import { Baseline } from 'lucide-react';
+import { fieldMetadata } from '../../_utils/field-metadata';
+import React from 'react';
 
 function FieldsView() {
   const form = useFormData();
@@ -89,11 +90,26 @@ function FieldsView() {
                 >
                   <GripVertical />
                 </div> */}
-                <div className="flex items-center gap-4 rounded-lg bg-emerald-300 p-1.5 text-emerald-950">
-                  <Baseline size={18} />
-                  <span>{idx + 1}</span>
+                <div
+                  className="rounded-lg p-1.5"
+                  style={{
+                    backgroundColor: fieldMetadata(item).color,
+                  }}
+                >
+                  <span
+                    className="flex items-center gap-4 "
+                    style={{
+                      color: fieldMetadata(item).color,
+                      filter: 'brightness(200%)',
+                    }}
+                  >
+                    {React.createElement(fieldMetadata(item).icon, {
+                      size: 18,
+                    })}
+                    {idx + 1}
+                  </span>
                 </div>
-                <span>{item.id}</span>
+                <span>{item.name}</span>
               </div>
             )}
           </div>

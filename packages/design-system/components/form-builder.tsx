@@ -133,12 +133,7 @@ function zodGenerator(fields: FormFieldType[]) {
         baseSchema = z.string().email('Invalid email address');
         break;
       case 'phone':
-        baseSchema = z.string().refine((val) => {
-          if (!val) {
-            return true;
-          }
-          return PHONE_NUMBER_REGEX.test(val);
-        }, 'Invalid phone number');
+        baseSchema = z.string();
         break;
 
       case 'textarea':
