@@ -18,6 +18,10 @@ function FieldsView() {
     () => utils.toSlottedItems(items, 'id', slotItemMap),
     [items, slotItemMap]
   );
+  const [activeField, setActiveField] = useQueryState('activeField', {
+    defaultValue: form.fields[0]?.id,
+    clearOnDefault: false,
+  });
 
   const [_, setFormState] = useQueryState('form');
 
@@ -79,9 +83,12 @@ function FieldsView() {
             data-swapy-slot={slotId}
           >
             {item && (
+              // biome-ignore lint/nursery/noStaticElementInteractions: <explanation>
+              // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
               <div
-                className="item flex cursor-pointer items-center gap-2 rounded-xl p-2 text-sm hover:bg-gray-200 data-[swapy-dragging]:bg-neutral-300"
+                className={`item flex h-fit w-full cursor-pointer break-before-all items-center justify-start gap-2 self-start rounded-xl p-2 text-sm hover:bg-gray-200 data-[swapy-dragging]:bg-neutral-300 ${activeField === itemId ? 'bg-gray-200' : ''}`}
                 data-swapy-item={itemId}
+                onClick={() => setActiveField(itemId)}
                 key={itemId}
               >
                 {/* <div
@@ -91,25 +98,25 @@ function FieldsView() {
                   <GripVertical />
                 </div> */}
                 <div
-                  className="rounded-lg p-1.5"
+                  className="shrink-0 rounded-lg px-1 py-0.5 pr-1.5"
                   style={{
                     backgroundColor: fieldMetadata(item).color,
                   }}
                 >
                   <span
-                    className="flex items-center gap-4 "
+                    className="flex shrink-0 grow items-center gap-3 "
                     style={{
                       color: fieldMetadata(item).color,
                       filter: 'brightness(200%)',
                     }}
                   >
                     {React.createElement(fieldMetadata(item).icon, {
-                      size: 18,
+                      size: 16,
                     })}
                     {idx + 1}
                   </span>
                 </div>
-                <span>{item.name}</span>
+                <span>{item.name.replace('_', ' ')}</span>
               </div>
             )}
           </div>

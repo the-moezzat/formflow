@@ -14,7 +14,7 @@ import {
   Star,
 } from 'lucide-react';
 
-export function fieldMetadata(field: FormField) {
+export function fieldMetadata(field: FormField | { type: string }) {
   switch (field.type) {
     case 'text':
       return {
@@ -36,7 +36,7 @@ export function fieldMetadata(field: FormField) {
       };
     case 'phone':
       return {
-        Label: 'Phone',
+        label: 'Phone',
         icon: Phone,
         color: '#8E7AB5',
       };

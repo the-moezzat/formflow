@@ -13,7 +13,7 @@ import {
 
 function Toolbar() {
   return (
-    <div className="sticky top-0 z-50 mx-auto flex w-full items-center gap-2 rounded-xl bg-accent/80 p-1 backdrop-blur-sm">
+    <div className="sticky top-0 z-50 mx-auto flex w-full items-center gap-2 rounded-xl border border-accent bg-accent/60 p-1 backdrop-blur-sm">
       <Button variant="outline">
         <Plus />
         Add Field

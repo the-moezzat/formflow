@@ -3,8 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { FormField as FormFieldType } from '@repo/schema-types/types';
 import { type ControllerRenderProps, useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-const PHONE_NUMBER_REGEX = /^\+?[\d\s-()]+$/;
 import {
   FormField,
   FormItem,
@@ -14,14 +12,17 @@ import {
   Form,
 } from './ui/form';
 import { Button } from './ui/button';
-import React from 'react';
 import RatingInput from './form-components/rating-input';
-import PhoneInput from './form-components/phone-input';
+import { PhoneInput } from './ui/phone-input';
 import NumberInput from './form-components/number-input';
 import EmailInput from './form-components/email-input';
 import ShortTextInput from './form-components/short-text-input';
 import LongTextInput from './form-components/long-text-input';
 import { toast } from 'sonner';
+import { isValidPhoneNumber } from 'react-phone-number-input';
+import { useQueryState } from 'nuqs';
+import * as React from 'react';
+import type * as RPNInput from 'react-phone-number-input';
 
 export default function FormBuilder({ fields }: { fields: FormFieldType[] }) {
   // 1. get the zod schema
@@ -52,6 +53,11 @@ export default function FormBuilder({ fields }: { fields: FormFieldType[] }) {
       toast.error('Failed to submit the form. Please try again.');
     }
   }
+
+  const [activeFieldId] = useQueryState('activeField', {
+    defaultValue: fields[0]?.id,
+  });
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -62,7 +68,9 @@ export default function FormBuilder({ fields }: { fields: FormFieldType[] }) {
               name={formField.name}
               key={formField.id}
               render={({ field }) => (
-                <FormItem>
+                <FormItem
+                  className={`rounded-lg p-4 outline-0 ${activeFieldId === formField.id ? 'shadow-sm outline outline-2 outline-primary' : ''}`}
+                >
                   <FormLabel required={formField.required}>
                     {formField.label}
                   </FormLabel>
@@ -109,7 +117,14 @@ function TestInput({
     case 'email':
       return <EmailInput formField={formField} {...controller} />;
     case 'phone':
-      return <PhoneInput formField={formField} {...controller} />;
+      return (
+        <PhoneInput
+          placeholder={formField.placeholder}
+          defaultCountry="EG"
+          {...controller}
+          value={controller.value as RPNInput.Value}
+        />
+      );
     case 'textarea':
       return <LongTextInput formField={formField} {...controller} />;
     case 'number':
@@ -133,7 +148,9 @@ function zodGenerator(fields: FormFieldType[]) {
         baseSchema = z.string().email('Invalid email address');
         break;
       case 'phone':
-        baseSchema = z.string();
+        baseSchema = z
+          .string()
+          .refine(isValidPhoneNumber, { message: 'Invalid phone number' });
         break;
 
       case 'textarea':
@@ -153,12 +170,10 @@ function zodGenerator(fields: FormFieldType[]) {
     }
 
     // Apply required constraint if needed
-    if (field.required) {
-      baseSchema = baseSchema.min(1, `${field.label} is required`);
-    } else {
+
+    if (!field.required) {
       baseSchema = baseSchema.optional();
     }
-
     return baseSchema;
   }
 
