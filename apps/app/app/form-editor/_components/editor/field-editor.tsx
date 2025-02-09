@@ -10,7 +10,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@repo/design-system/components/ui/select';
@@ -43,18 +42,18 @@ function FieldEditor() {
           handleFieldChange({ type: value }, activeFieldId)
         }
       >
-        <SelectTrigger className="ps-2 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_[data-square]]:shrink-0">
+        <SelectTrigger className="h-fit p-3 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_[data-square]]:shrink-0">
           <SelectValue placeholder="Select Field Type" />
         </SelectTrigger>
         <SelectContent className="[&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2 [&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8">
           <SelectGroup>
-            <SelectLabel className="ps-2">Impersonate user</SelectLabel>
+            {/* <SelectLabel className="ps-2">Impersonate user</SelectLabel> */}
             {formFields.map((field) => (
               <SelectItem value={field} key={field}>
                 <span
                   data-square
                   className={cn(
-                    'flex size-5 items-center justify-center rounded font-medium text-xs'
+                    'flex size-6 items-center justify-center rounded font-medium text-s'
                   )}
                   style={{
                     backgroundColor: fieldMetadata({ type: field }).color,
