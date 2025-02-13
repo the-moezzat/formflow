@@ -21,6 +21,9 @@ const RootLayout = ({ children }: RootLayoutProperties) => (
     className={cn(fonts, 'scroll-smooth')}
     suppressHydrationWarning
   >
+    <head>
+      <meta name="apple-mobile-web-app-title" content="Formflow" />
+    </head>
     <body>
       <DesignSystemProvider>
         <Header />

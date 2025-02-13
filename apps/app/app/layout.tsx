@@ -10,6 +10,9 @@ type RootLayoutProperties = {
 
 const RootLayout = ({ children }: RootLayoutProperties) => (
   <html lang="en" className={fonts} suppressHydrationWarning>
+    <head>
+      <meta name="apple-mobile-web-app-title" content="Formflow" />
+    </head>
     <body>
       <DesignSystemProvider>{children}</DesignSystemProvider>
       <Toolbar />
