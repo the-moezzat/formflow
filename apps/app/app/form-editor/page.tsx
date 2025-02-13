@@ -1,22 +1,65 @@
-import { decodeFormData } from "@/utils/formEncoder"
+import Toolbar from './_components/editor/toolbar';
+import FieldsView from './_components/editor/fields-view';
+import { Suspense } from 'react';
+import FormPreviewSection from './_components/editor/form-preview';
+import { decodeJsonData } from '@/utils/formEncoder';
+import type { FormField, GeneratedForm } from '@repo/schema-types/types';
+import FieldEditor from './_components/editor/field-editor';
 
 // Page props type for searchParams
 type PageProps = {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined, form: string }>
-}
+  searchParams: Promise<{
+    [key: string]: string | string[] | undefined;
+    form: string;
+  }>;
+};
 
 async function Page({ searchParams }: PageProps) {
-  // Extract query parameters
-  const form = (await searchParams).form
+  const encodedForm = (await searchParams).form;
+  const form = decodeJsonData<GeneratedForm>(encodedForm);
+
+  const testForm: FormField[] = [
+    {
+      name: 'tsest',
+      label: 'Test',
+      type: 'rating',
+      required: true,
+      placeholder: 'Test',
+      id: 'test',
+    },
+    {
+      name: 'test',
+      label: 'Test',
+      type: 'text',
+      required: true,
+      placeholder: 'Test',
+      id: 'tes2',
+    },
+  ];
 
   return (
-    <div className="p-4">
-      <h1>Form Editor</h1>
-      <div className="mt-4">
-        <pre>{JSON.stringify(decodeFormData(form), null, 2)}</pre>
+    <div className="grid h-[calc(100vh-74px)] grid-cols-[4fr,16fr,4fr] grid-rows-[auto,1fr] gap-4 overflow-y-scroll">
+      <div className="col-start-1 row-span-2 rounded-2xl border border-accent bg-accent/60">
+        {/* <h2 className="p-2 font-semibold text-neutral-800 text-xl">
+          Form Fields
+        </h2> */}
+        <Suspense>
+          <FieldsView />
+        </Suspense>
+      </div>
+      <Toolbar />
+      <Suspense>
+        <FormPreviewSection />
+      </Suspense>
+      <div className="row-span-2 rounded-2xl border border-accent bg-accent/60">
+        {/* <h2 className="p-2 font-semibold text-neutral-800 text-xl">
+          Field Settings
+        </h2> */}
+        <FieldEditor />
+        {/* <FormViewDnd /> */}
       </div>
     </div>
-  )
+  );
 }
 
-export default Page
+export default Page;
