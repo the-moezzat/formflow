@@ -7,9 +7,9 @@ import {
   Play,
   Accessibility,
   Languages,
-  Settings,
-  WandSparkles,
 } from 'lucide-react';
+import Settings from './toolbar-actions/settings';
+import EditWithAi from './toolbar-actions/edit-with-ai';
 
 function Toolbar() {
   return (
@@ -19,33 +19,49 @@ function Toolbar() {
         Add Field
       </Button>
       <Separator orientation="vertical" className="h-4" />
-      <Button variant="ghost" className="hover:bg-neutral-200">
+      <Button
+        variant="ghost"
+        className="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+      >
         <Palette />
         Theme
       </Button>
       <Separator orientation="vertical" className="h-4" />
-      <Button variant="ghost" size={'icon'} className="hover:bg-neutral-200">
+      <Button
+        variant="ghost"
+        size={'icon'}
+        className="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+      >
         <Smartphone />
       </Button>
-      <Button variant="ghost" size={'icon'} className="hover:bg-neutral-200">
+      <Button
+        variant="ghost"
+        size={'icon'}
+        className="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+      >
         <Play />
       </Button>
 
       <Separator orientation="vertical" className="h-4" />
 
-      <Button variant="ghost" size={'icon'} className="hover:bg-neutral-200">
+      <Button
+        variant="ghost"
+        size={'icon'}
+        className="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+      >
         <Accessibility />
       </Button>
-      <Button variant="ghost" size={'icon'} className="hover:bg-neutral-200">
+      <Button
+        variant="ghost"
+        size={'icon'}
+        className="hover:bg-neutral-200 dark:hover:bg-neutral-800"
+      >
         <Languages />
       </Button>
-      <Button variant="ghost" size={'icon'} className="hover:bg-neutral-200">
-        <Settings />
-      </Button>
-      <Button variant="outline" className="ml-auto hover:bg-neutral-200">
-        <WandSparkles />
-        Edit with AI
-      </Button>
+
+      <Settings />
+
+      <EditWithAi />
     </div>
   );
 }

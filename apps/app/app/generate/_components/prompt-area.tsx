@@ -13,6 +13,10 @@ const initialState = {
     title: '',
     fields: [],
     descriptions: '',
+    metadata: {
+      createdAt: '',
+      updatedAt: '',
+    },
   },
 };
 
@@ -33,7 +37,7 @@ function PromptArea() {
       />
       <div>
         <Textarea
-          className="relative min-h-36 resize-none bg-neutral-900 p-5 text-white placeholder:text-base placeholder:text-neutral-300 focus:ring-0 md:text-base"
+          className="relative min-h-36 resize-none bg-gray-100 p-5 text-gray-900 placeholder:text-base placeholder:text-gray-600 focus:ring-0 md:text-base dark:bg-neutral-900 dark:text-white dark:placeholder:text-gray-300"
           placeholder="Ask whatever you want... "
           maxRows={10}
           name="prompt"

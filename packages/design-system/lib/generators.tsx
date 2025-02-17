@@ -1,153 +1,56 @@
 import type { FormField } from '@repo/schema-types/types';
-import { z, type ZodTypeAny } from 'zod';
+import { isValidPhoneNumber } from 'react-phone-number-input';
+import { z } from 'zod';
 
-export const generateZodSchema = (
-  formFields: FormField[]
-): z.ZodObject<Record<string, z.ZodTypeAny>> => {
-  const schemaObject: Record<string, z.ZodTypeAny> = {};
-
-  const processField = (field: FormField): void => {
-    let fieldSchema: z.ZodTypeAny;
+export function zodGenerator(fields: FormField[]) {
+  function generateFieldSchema(field: FormField) {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    let baseSchema: any;
 
     switch (field.type) {
       case 'text':
-      case 'phone':
-      case 'textarea':
-        fieldSchema = z.string();
+        baseSchema = z.string();
         break;
 
       case 'email':
-        fieldSchema = z.string().email();
+        baseSchema = z.string().email('Invalid email address');
+        break;
+      case 'phone':
+        baseSchema = z
+          .string()
+          .refine(isValidPhoneNumber, { message: 'Invalid phone number' });
+        break;
+
+      case 'textarea':
+        baseSchema = z.string();
         break;
 
       case 'number':
-        fieldSchema = z.coerce.number();
+        baseSchema = z.number().positive('Value must be positive');
         break;
 
       case 'rating':
-        fieldSchema = z.coerce.number({
-          required_error: 'Rating is required',
-        });
-        break;
-
-      case 'date':
-        fieldSchema = z.coerce.date();
-        break;
-
-      case 'signature':
-        fieldSchema = z.string({
-          required_error: 'Signature is required',
-        });
-        break;
-
-      case 'smartDatetime':
-        fieldSchema = z.date();
-        break;
-
-      case 'location':
-        fieldSchema = z.tuple([
-          z.string({
-            required_error: 'Country is required',
-          }),
-          z
-            .string()
-            .optional(), // State name, optional
-        ]);
-        break;
-      case 'slider':
-        fieldSchema = z.coerce.number();
+        baseSchema = z.number().min(1).max(5);
         break;
 
       default:
-        fieldSchema = z.string();
+        baseSchema = z.string();
     }
 
-    if (field.required !== true) {
-      fieldSchema = fieldSchema.optional();
+    // Apply required constraint if needed
+
+    if (!field.required) {
+      baseSchema = baseSchema.optional();
     }
+    return baseSchema;
+  }
 
-    schemaObject[field.id] = fieldSchema as ZodTypeAny;
-  };
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const schemaObject: Record<string, any> = {};
 
-  formFields.flat().forEach(processField);
+  for (const field of fields) {
+    schemaObject[field.name] = generateFieldSchema(field);
+  }
 
   return z.object(schemaObject);
-};
-
-export const zodSchemaToString = (schema: z.ZodTypeAny): string => {
-  if (schema instanceof z.ZodDefault) {
-    return `${zodSchemaToString(schema._def.innerType)}.default(${JSON.stringify(schema._def.defaultValue())})`
-  }
-
-  if (schema instanceof z.ZodBoolean) {
-    return `z.boolean()`
-  }
-
-  if (schema instanceof z.ZodNumber) {
-    let result = 'z.number()'
-    if ('checks' in schema._def) {
-      schema._def.checks.forEach((check: any) => {
-        if (check.kind === 'min') {
-          result += `.min(${check.value})`
-        } else if (check.kind === 'max') {
-          result += `.max(${check.value})`
-        }
-      })
-    }
-    return result
-  }
-
-  if (schema instanceof z.ZodString) {
-    let result = 'z.string()'
-    if ('checks' in schema._def) {
-      schema._def.checks.forEach((check: any) => {
-        if (check.kind === 'min') {
-          result += `.min(${check.value})`
-        } else if (check.kind === 'max') {
-          result += `.max(${check.value})`
-        }
-      })
-    }
-    return result
-  }
-
-  if (schema instanceof z.ZodDate) {
-    return `z.coerce.date()`
-  }
-
-  if (schema instanceof z.ZodArray) {
-    return `z.array(${zodSchemaToString(schema.element)}).nonempty("Please at least one item")`
-  }
-
-  if (schema instanceof z.ZodTuple) {
-    return `z.tuple([${schema.items.map((item: z.ZodTypeAny) => zodSchemaToString(item)).join(', ')}])`
-  }
-
-  if (schema instanceof z.ZodObject) {
-    const shape = schema.shape
-    const shapeStrs = Object.entries(shape).map(
-      ([key, value]) => `${key}: ${zodSchemaToString(value as ZodTypeAny)}`,
-    )
-    return `z.object({
-  ${shapeStrs.join(',\n  ')}
-})`
-  }
-
-  if (schema instanceof z.ZodOptional) {
-    return `${zodSchemaToString(schema.unwrap())}.optional()`
-  }
-
-  return 'z.unknown()'
-}
-
-
-export const getZodSchemaString = (formFields: FormField[]): string => {
-  const schema = generateZodSchema(formFields)
-  const schemaEntries = Object.entries(schema.shape)
-    .map(([key, value]) => {
-      return `  ${key}: ${zodSchemaToString(value as ZodTypeAny)}`
-    })
-    .join(',\n')
-
-  return `const formSchema = z.object({\n${schemaEntries}\n});`
 }

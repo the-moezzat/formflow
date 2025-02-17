@@ -10,23 +10,54 @@ import React from 'react';
 
 function FieldsView() {
   const form = useFormData();
-  const [items, setItems] = useState<FormField[]>(form.fields);
-  const [slotItemMap, setSlotItemMap] = useState<SlotItemMapArray>(
-    utils.initSlotItemMap(items, 'id')
-  );
-  const slottedItems = useMemo(
-    () => utils.toSlottedItems(items, 'id', slotItemMap),
-    [items, slotItemMap]
-  );
+  const [encodedForm, setFormState] = useQueryState('form');
   const [activeField, setActiveField] = useQueryState('activeField', {
     defaultValue: form.fields[0]?.id,
     clearOnDefault: false,
   });
-
-  const [_, setFormState] = useQueryState('form');
-
   const swapy = useRef<Swapy | null>(null);
   const container = useRef(null);
+
+  // console.log('encodedForm', encodedForm);
+
+  const [items, setItems] = useState<FormField[]>(form.fields);
+  const [slotItemMap, setSlotItemMap] = useState<SlotItemMapArray>(
+    utils.initSlotItemMap(items, 'id')
+  );
+  const slottedItems = useMemo(() => {
+    console.log('original items', items);
+    console.log('slotItemMap', slotItemMap);
+    console.log(
+      'slotted items',
+      utils.toSlottedItems(items, 'id', slotItemMap)
+    );
+    return utils.toSlottedItems(items, 'id', slotItemMap);
+  }, [items, slotItemMap]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!container.current) {
+      return;
+    }
+
+    const isOrderChange = false;
+
+    setItems(form.fields);
+
+    if (isOrderChange) {
+      // reorder fields based on slotItemMap
+
+      console.log('###################reordering fields###################');
+      // const fieldsOrder = slotItemMap.map(({ slot, item }, idx) => {
+      //   return {
+      //     slot,
+      //     item: form.fields[idx].id,
+      //   };
+      // });
+
+      // setSlotItemMap(utils.initSlotItemMap(items, 'id'));
+    }
+  }, [encodedForm]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(
@@ -78,7 +109,7 @@ function FieldsView() {
       <div className=" select-none space-y-2 p-2">
         {slottedItems.map(({ slotId, itemId, item }, idx) => (
           <div
-            className="slot rounded-xl data-[swapy-highlighted]:bg-gray-300"
+            className="slot rounded-xl data-[swapy-highlighted]:bg-gray-300 dark:data-[swapy-highlighted]:bg-neutral-900"
             key={slotId}
             data-swapy-slot={slotId}
           >
@@ -86,7 +117,7 @@ function FieldsView() {
               // biome-ignore lint/nursery/noStaticElementInteractions: <explanation>
               // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
               <div
-                className={`item flex h-fit w-full cursor-pointer break-before-all items-center justify-start gap-2 self-start rounded-xl p-2 text-sm hover:bg-gray-200 data-[swapy-dragging]:bg-neutral-300 ${activeField === itemId ? 'bg-gray-200' : ''}`}
+                className={`item flex h-fit w-full cursor-pointer break-before-all items-center justify-start gap-2 self-start rounded-xl p-2 text-sm hover:bg-gray-200 data-[swapy-dragging]:bg-neutral-300 dark:data-[swapy-dragging]:bg-neutral-800 dark:hover:bg-neutral-800 ${activeField === itemId ? 'bg-gray-200 dark:bg-neutral-800' : ''}`}
                 data-swapy-item={itemId}
                 onClick={() => setActiveField(itemId)}
                 key={itemId}

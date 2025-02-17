@@ -14,6 +14,7 @@ import {
 
 import { cn } from "@repo/design-system/lib/utils"
 import { Label } from "@repo/design-system/components/ui/label"
+import flags from "react-phone-number-input/flags"
 
 const Form = FormProvider
 
@@ -90,8 +91,8 @@ type FormLabelProps = React.ComponentPropsWithoutRef<typeof Label>
 
 const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & { required?: boolean }>(({ className, required, ...props }, ref) => (
-  <Label ref={ref} required={required} className={className} {...props} />
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & { required?: boolean, flags?: boolean }>(({ className, required, flags, ...props }, ref) => (
+  <Label ref={ref} required={required} flags={flags} className={className} {...props} />
 ))
 FormLabel.displayName = "FormLabel"
 

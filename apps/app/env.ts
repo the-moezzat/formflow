@@ -29,8 +29,11 @@ export const env = createEnv({
   server: {
     ENV: z.string().min(1),
   },
-  client: {},
+  client: {
+    NEXT_PUBLIC_PREVIEW_URL: z.string(),
+  },
   runtimeEnv: {
     ENV: process.env.ENV,
+    NEXT_PUBLIC_PREVIEW_URL: process.env.NEXT_PUBLIC_PREVIEW_URL,
   },
 });

@@ -25,4 +25,10 @@ export const formSchema = z.object({
   title: z.string(),
   descriptions: z.string().optional(),
   fields: z.array(formFieldSchema),
+  metadata: z
+    .object({
+      createdAt: z.string().optional(),
+      updatedAt: z.string().optional(),
+    })
+    .optional(),
 });

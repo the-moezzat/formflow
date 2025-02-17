@@ -8,6 +8,7 @@ import { cn } from "@repo/design-system/lib/utils"
 
 interface LabelProps {
   required?: boolean;
+  flags?: boolean;
 }
 
 const labelVariants = cva(
@@ -19,7 +20,7 @@ const Label = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
     VariantProps<typeof labelVariants> &
     LabelProps
->(({ className, required, ...props }, ref) => (   
+>(({ className, required, flags= true, ...props }, ref) => (   
    <div className="mb-2 flex items-center justify-between gap-1">
 
   <LabelPrimitive.Root
@@ -28,9 +29,9 @@ const Label = React.forwardRef<
     {...props}
   >
     {props.children}
-    {required && <span className="text-destructive">*</span>}
+    {flags && required && <span className="text-destructive">*</span>}
   </LabelPrimitive.Root> 
-          {!required && <span className="text-sm text-muted-foreground">Optional</span>}
+          {flags && !required && <span className="text-sm text-muted-foreground">Optional</span>}
      
   </div>
 

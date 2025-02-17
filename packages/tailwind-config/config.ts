@@ -25,6 +25,18 @@ export const config: Config = {
     },
     extend: {
       colors: {
+        gray: {
+          50: '#f8f9fa', // gray-0
+          100: '#f1f3f5', // gray-1
+          200: '#e9ecef', // gray-2
+          300: '#dee2e6', // gray-3
+          400: '#ced4da', // gray-4
+          500: '#adb5bd', // gray-5
+          600: '#868e96', // gray-6
+          700: '#495057', // gray-7
+          800: '#343a40', // gray-8
+          900: '#212529', // gray-9
+        },
         border: 'hsl(var(--border) / <alpha-value>)',
         input: 'hsl(var(--input) / <alpha-value>)',
         ring: 'hsl(var(--ring) / <alpha-value>)',

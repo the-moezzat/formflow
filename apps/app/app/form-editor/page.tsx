@@ -1,10 +1,10 @@
 import Toolbar from './_components/editor/toolbar';
-import FieldsView from './_components/editor/fields-view';
 import { Suspense } from 'react';
 import FormPreviewSection from './_components/editor/form-preview';
 import { decodeJsonData } from '@/utils/formEncoder';
-import type { FormField, GeneratedForm } from '@repo/schema-types/types';
+import type { GeneratedForm } from '@repo/schema-types/types';
 import FieldEditor from './_components/editor/field-editor';
+import { FieldsViewWrapper } from './_components/editor/fields-view-wrapper';
 
 // Page props type for searchParams
 type PageProps = {
@@ -18,25 +18,6 @@ async function Page({ searchParams }: PageProps) {
   const encodedForm = (await searchParams).form;
   const form = decodeJsonData<GeneratedForm>(encodedForm);
 
-  const testForm: FormField[] = [
-    {
-      name: 'tsest',
-      label: 'Test',
-      type: 'rating',
-      required: true,
-      placeholder: 'Test',
-      id: 'test',
-    },
-    {
-      name: 'test',
-      label: 'Test',
-      type: 'text',
-      required: true,
-      placeholder: 'Test',
-      id: 'tes2',
-    },
-  ];
-
   return (
     <div className="grid h-[calc(100vh-74px)] grid-cols-[4fr,16fr,4fr] grid-rows-[auto,1fr] gap-4 overflow-y-scroll">
       <div className="col-start-1 row-span-2 rounded-2xl border border-accent bg-accent/60">
@@ -44,7 +25,7 @@ async function Page({ searchParams }: PageProps) {
           Form Fields
         </h2> */}
         <Suspense>
-          <FieldsView />
+          <FieldsViewWrapper />{' '}
         </Suspense>
       </div>
       <Toolbar />

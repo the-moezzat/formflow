@@ -16,6 +16,7 @@ import {
 import { fieldMetadata } from '../../_utils/field-metadata';
 import React from 'react';
 import type { FormField } from '@repo/schema-types/types';
+import { Input } from '@repo/design-system/components/ui/input';
 
 const formFields: FormField['type'][] = [
   'text',
@@ -35,7 +36,7 @@ function FieldEditor() {
   const field = form.fields.find((field) => field.id === activeFieldId);
 
   return (
-    <div className="flex flex-col gap-4 p-2">
+    <div className="flex flex-col gap-6 p-2">
       <Select
         value={field?.type}
         onValueChange={(value: FormField['type']) =>
@@ -76,9 +77,14 @@ function FieldEditor() {
           </SelectGroup>
         </SelectContent>
       </Select>
-      <h2 className="font-medium text-base text-gray-800">Settings</h2>
+      <h2 className="font-medium text-gray-800 text-lg dark:text-neutral-200">
+        Settings
+      </h2>
       <div className="flex justify-between">
-        <label className="text-gray-600" htmlFor="field-required">
+        <label
+          className="text-gray-600 dark:text-neutral-400"
+          htmlFor="field-required"
+        >
           Required
         </label>
         <Switch
@@ -87,6 +93,38 @@ function FieldEditor() {
           onCheckedChange={(checked) =>
             handleFieldChange({ required: checked }, activeFieldId)
           }
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label
+          className="text-gray-600 dark:text-neutral-400"
+          htmlFor="field-placeholder"
+        >
+          PlaceHolder
+        </label>
+        <Input
+          id="field-placeholder"
+          onChange={(e) =>
+            handleFieldChange({ placeholder: e.target.value }, activeFieldId)
+          }
+          value={field?.placeholder ?? ''}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label
+          className="text-gray-600 dark:text-neutral-400"
+          htmlFor="field-label"
+        >
+          Label
+        </label>
+        <Input
+          id="field-label"
+          onChange={(e) =>
+            handleFieldChange({ label: e.target.value }, activeFieldId)
+          }
+          value={field?.label ?? ''}
         />
       </div>
     </div>
