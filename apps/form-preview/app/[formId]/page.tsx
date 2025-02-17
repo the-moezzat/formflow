@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description,
 };
 
-const App = async ({ params }: { params: { formId: string } }) => {
+const App = async ({ params }: { params: Promise<{ formId: string }> }) => {
   const { formId } = await params;
   const form = decodeJsonData<GeneratedForm>(formId);
   return (
