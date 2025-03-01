@@ -7,7 +7,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from '@repo/design-system/components/ui/navigation-menu';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useParams, usePathname, useSearchParams } from 'next/navigation';
 
 const links = [
   { href: '/', label: 'Create' },
@@ -19,7 +19,9 @@ const links = [
 export function EditorNav() {
   const pathname = usePathname();
   const query = useSearchParams();
-  const currentPath = pathname.replace('/form-editor', '') || '/';
+  const { formId } = useParams();
+
+  const currentPath = pathname.replace(`/${formId}`, '') || '/';
 
   return (
     <NavigationMenu>
@@ -27,7 +29,7 @@ export function EditorNav() {
         {links.map(({ href, label }) => (
           <NavigationMenuItem key={href}>
             <Link
-              href={`/form-editor${href}?form=${query.get('form')}`}
+              href={`/${formId}${href}?form=${query.get('form')}`}
               legacyBehavior
               passHref
             >

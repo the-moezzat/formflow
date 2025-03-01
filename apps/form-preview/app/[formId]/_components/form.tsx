@@ -3,13 +3,20 @@ import FormBuilder from '@repo/design-system/components/form-builder';
 import { Button } from '@repo/design-system/components/ui/button';
 import type { FormField } from '@repo/schema-types/types';
 import { toast } from 'sonner';
+import { submitForm } from '../actions/form-submission';
+import { useParams } from 'next/navigation';
 
 function Form({ fields }: { fields: FormField[] }) {
+  const { formId } = useParams() as { formId: string };
   return (
     <FormBuilder
       fields={fields}
       mode="prod"
-      onSubmit={(values) => {
+      onSubmit={async (values) => {
+        const reponse = await submitForm({ formId, response: values });
+
+        console.log('response', reponse);
+
         try {
           toast(
             <pre className="mt-2 min-w-[340px] rounded-md bg-slate-950 p-4">

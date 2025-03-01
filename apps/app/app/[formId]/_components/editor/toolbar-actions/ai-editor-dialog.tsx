@@ -48,7 +48,7 @@ const DialogContent = React.forwardRef<
         duration={20}
         style={{ transform: 'scale(0.97,0.8)' }}
       />
-      <div className="z-50 rounded-3xl border bg-white p-2 dark:bg-gray-900">
+      <div className="z-50 rounded-3xl border bg-white/80 p-2 dark:bg-gray-900/80">
         {children}
       </div>
     </DialogPrimitive.Content>

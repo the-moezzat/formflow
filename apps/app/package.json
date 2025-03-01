@@ -34,6 +34,7 @@
     "@repo/webhooks": "workspace:*",
     "@sentry/nextjs": "^8.50.0",
     "@t3-oss/env-nextjs": "^0.11.1",
+    "@tanstack/react-table": "^8.21.2",
     "@types/pako": "^2.0.3",
     "fuse.js": "^7.0.0",
     "import-in-the-middle": "^1.12.0",

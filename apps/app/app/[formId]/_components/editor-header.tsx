@@ -24,11 +24,11 @@ import {
 } from '@repo/design-system/components/ui/popover';
 import InputCopy from '@repo/design-system/components/input-copy';
 import { env } from '@/env';
-import { useQueryState } from 'nuqs';
+import { useParams } from 'next/navigation';
 
 function EditorHeader() {
   const { title: formTitle } = useFormData();
-  const [form] = useQueryState('form');
+  const { formId } = useParams();
   return (
     <header className="flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -69,7 +69,7 @@ function EditorHeader() {
                 Once published, your form will go live.
               </p>
             </div>
-            <InputCopy value={`${env.NEXT_PUBLIC_PREVIEW_URL}/${form}`} />
+            <InputCopy value={`${env.NEXT_PUBLIC_PREVIEW_URL}/${formId}`} />
           </PopoverContent>
         </Popover>
 

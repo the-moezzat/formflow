@@ -25,12 +25,6 @@ function FieldsView() {
     utils.initSlotItemMap(items, 'id')
   );
   const slottedItems = useMemo(() => {
-    console.log('original items', items);
-    console.log('slotItemMap', slotItemMap);
-    console.log(
-      'slotted items',
-      utils.toSlottedItems(items, 'id', slotItemMap)
-    );
     return utils.toSlottedItems(items, 'id', slotItemMap);
   }, [items, slotItemMap]);
 
@@ -39,24 +33,7 @@ function FieldsView() {
     if (!container.current) {
       return;
     }
-
-    const isOrderChange = false;
-
     setItems(form.fields);
-
-    if (isOrderChange) {
-      // reorder fields based on slotItemMap
-
-      console.log('###################reordering fields###################');
-      // const fieldsOrder = slotItemMap.map(({ slot, item }, idx) => {
-      //   return {
-      //     slot,
-      //     item: form.fields[idx].id,
-      //   };
-      // });
-
-      // setSlotItemMap(utils.initSlotItemMap(items, 'id'));
-    }
   }, [encodedForm]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -83,7 +60,7 @@ function FieldsView() {
       animation: 'spring',
       autoScrollOnDrag: true,
       swapMode: 'hover',
-      // enabled: true,
+      enabled: true,
       dragAxis: 'y',
     });
 
@@ -95,7 +72,6 @@ function FieldsView() {
         fields: fieldsOrder.map((id) => items.find((field) => field.id === id)),
       };
       const newEncodedForm = encodeJsonData(newFields);
-      //   console.log('newFields', newEncodedForm);
       setFormState(newEncodedForm);
     });
 
@@ -105,8 +81,8 @@ function FieldsView() {
   }, []);
 
   return (
-    <div ref={container}>
-      <div className=" select-none space-y-2 p-2">
+    <div ref={container} className="overflow-auto">
+      <div className=" h-full select-none space-y-2 overflow-auto p-2">
         {slottedItems.map(({ slotId, itemId, item }, idx) => (
           <div
             className="slot rounded-xl data-[swapy-highlighted]:bg-gray-300 dark:data-[swapy-highlighted]:bg-neutral-900"
@@ -147,7 +123,9 @@ function FieldsView() {
                     {idx + 1}
                   </span>
                 </div>
-                <span>{item.name.replace('_', ' ')}</span>
+                <span className="line-clamp-2 overflow-hidden text-ellipsis">
+                  {item.name.replaceAll('_', ' ')}
+                </span>
               </div>
             )}
           </div>

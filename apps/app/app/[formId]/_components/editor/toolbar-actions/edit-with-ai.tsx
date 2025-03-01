@@ -1,13 +1,13 @@
 'use client';
-import { Button } from '@repo/design-system/components/ui/button';
-import { WandSparkles } from 'lucide-react';
-import { Dialog, DialogContent, DialogTrigger } from './ai-editor-dialog';
+import generateEdit from '@/app/[formId]/_actions/ai-edit';
+import { useFormData } from '@/app/[formId]/_hooks/use-form-data';
 import { DialogTitle } from '@radix-ui/react-dialog';
+import { Button } from '@repo/design-system/components/ui/button';
 import { Input } from '@repo/design-system/components/ui/input';
-import { useActionState, useEffect } from 'react';
-import generateEdit from '@/app/form-editor/_actions/ai-edit';
-import { useFormData } from '@/app/form-editor/_hooks/use-form-data';
+import { WandSparkles } from 'lucide-react';
 import { useQueryState } from 'nuqs';
+import { useActionState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogTrigger } from './ai-editor-dialog';
 
 function EditWithAi() {
   const [decodedForm, setForm] = useQueryState('form');

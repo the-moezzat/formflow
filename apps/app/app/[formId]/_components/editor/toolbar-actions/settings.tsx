@@ -1,25 +1,24 @@
 'use client';
 
+import { useFormData } from '@/app/[formId]/_hooks/use-form-data';
+import { encodeJsonData } from '@/utils/formEncoder';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@repo/design-system/components/dialog-tabs';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
   Dialog,
-  DialogTrigger,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogClose,
+  DialogTrigger,
 } from '@repo/design-system/components/ui/dialog';
-import { Settings as SettingsIcon } from 'lucide-react';
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from '@repo/design-system/components/dialog-tabs';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -29,12 +28,13 @@ import {
   FormMessage,
 } from '@repo/design-system/components/ui/form';
 import { Input } from '@repo/design-system/components/ui/input';
-import { Textarea } from '@repo/design-system/components/ui/textarea';
-import { useFormData } from '@/app/form-editor/_hooks/use-form-data';
-import { useQueryState } from 'nuqs';
-import { encodeJsonData } from '@/utils/formEncoder';
-import { useState } from 'react';
 import { Separator } from '@repo/design-system/components/ui/separator';
+import { Textarea } from '@repo/design-system/components/ui/textarea';
+import { Settings as SettingsIcon } from 'lucide-react';
+import { useQueryState } from 'nuqs';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 const formSchema = z.object({
   title: z.string().min(3),

@@ -6,12 +6,20 @@ import { encodeJsonData } from '@/utils/formEncoder';
 import { redirect } from 'next/navigation';
 import { formSchema } from '@repo/schema-types/schema';
 import { env } from '@/env';
+import { createForm } from '@repo/database/services/form';
+import { auth } from '@repo/auth/server';
 
 type FormState = {
   prompt: string;
 };
 
 export default async function generateForm(_: FormState, data: FormData) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error('You must be signed in to add an item to your cart');
+  }
+
   const prompt: string = data.get('prompt') as string;
   log.info(prompt);
 
@@ -42,7 +50,15 @@ export default async function generateForm(_: FormState, data: FormData) {
   log.debug('Form Object', form);
   log.debug('Token consumed', object.usage);
 
-  redirect(`/form-editor?form=${encodeJsonData(form)}`);
+  const databaseForm = await createForm({
+    userId: userId,
+    title: form.title,
+    encodedForm: encodeJsonData(form),
+  });
+
+  console.log('Database form', databaseForm);
+
+  redirect(`/${databaseForm.id}?form=${encodeJsonData(form)}`);
 
   return {
     prompt,
