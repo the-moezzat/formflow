@@ -6,6 +6,9 @@ import { encodeJsonData } from '@/utils/formEncoder';
 // import { redirect } from 'next/navigation';
 import { formSchema } from '@repo/schema-types/schema';
 import { env } from '@/env';
+import { withTracing } from '@repo/analytics/posthog';
+import { analytics } from '@repo/analytics/posthog/server';
+import { auth } from '@repo/auth/server';
 
 type FormState = {
   prompt: string;
@@ -14,13 +17,28 @@ type FormState = {
 export default async function generateEdit(_: FormState, data: FormData) {
   const prompt: string = data.get('prompt') as string;
   const decodedForm = data.get('form') as string;
+  const authData = await auth();
+
+  if (!authData.userId) {
+    throw new Error('You must be signed in to edit the form');
+  }
 
   log.info(prompt);
   log.info(decodedForm);
 
+  const phClient = analytics;
+
+  const openai = withTracing(models.chat, phClient, {
+    posthogDistinctId: authData.userId, // optional
+    // posthogTraceId: 'trace_123', // optional
+    posthogProperties: { type: 'editing', paid: true }, // optional
+    posthogPrivacyMode: false, // optional
+    posthogGroups: { company: authData.orgId }, // optional
+  });
+
   const object = await generateObject({
     // model: models.google,
-    model: env.ENV === 'DEV' ? models.local : models.chat,
+    model: env.ENV === 'DEV' ? models.local : openai,
     messages: [
       {
         role: 'user',

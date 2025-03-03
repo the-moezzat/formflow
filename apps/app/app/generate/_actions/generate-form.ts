@@ -8,24 +8,36 @@ import { formSchema } from '@repo/schema-types/schema';
 import { env } from '@/env';
 import { createForm } from '@repo/database/services/form';
 import { auth } from '@repo/auth/server';
+import { analytics } from '@repo/analytics/posthog/server';
+import { withTracing } from '@repo/analytics/posthog';
 
 type FormState = {
   prompt: string;
 };
 
 export default async function generateForm(_: FormState, data: FormData) {
-  const { userId } = await auth();
+  const authData = await auth();
 
-  if (!userId) {
+  if (!authData.userId) {
     throw new Error('You must be signed in to add an item to your cart');
   }
 
   const prompt: string = data.get('prompt') as string;
   log.info(prompt);
 
+  const phClient = analytics;
+
+  const openai = withTracing(models.chat, phClient, {
+    posthogDistinctId: authData.userId, // optional
+    // posthogTraceId: 'trace_123', // optional
+    posthogProperties: { type: 'generation', paid: true }, // optional
+    posthogPrivacyMode: false, // optional
+    posthogGroups: { company: authData.orgId }, // optional
+  });
+
   const object = await generateObject({
     // model: models.google,
-    model: env.ENV === 'DEV' ? models.local : models.chat,
+    model: env.ENV === 'DEV' ? models.local : openai,
     messages: [
       {
         role: 'user',
@@ -51,12 +63,12 @@ export default async function generateForm(_: FormState, data: FormData) {
   log.debug('Token consumed', object.usage);
 
   const databaseForm = await createForm({
-    userId: userId,
+    userId: authData.userId,
     title: form.title,
     encodedForm: encodeJsonData(form),
   });
 
-  console.log('Database form', databaseForm);
+  log.info('Database form', databaseForm);
 
   redirect(`/${databaseForm.id}?form=${encodeJsonData(form)}`);
 
