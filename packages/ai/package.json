@@ -7,16 +7,17 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@ai-sdk/google": "^1.1.11",
+    "@ai-sdk/google": "^1.1.18",
     "@ai-sdk/openai": "^1.1.0",
+    "@ai-sdk/provider": "^1.0.9",
+    "@repo/analytics": "workspace:*",
     "@t3-oss/env-nextjs": "^0.11.1",
-    "ai": "^4.1.0",
+    "ai": "^4.1.50",
     "ollama-ai-provider": "^1.2.0",
     "react": "^19.0.0",
     "react-markdown": "^9.0.3",
     "tailwind-merge": "^2.6.0",
-    "zod": "^3.24.1",
-    "@repo/analytics": "workspace:*"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

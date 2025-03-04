@@ -27,7 +27,7 @@ export default async function generateForm(_: FormState, data: FormData) {
 
   const phClient = analytics;
 
-  const openai = withTracing(models.chat, phClient, {
+  const google = withTracing(models.google, phClient, {
     posthogDistinctId: authData.userId, // optional
     // posthogTraceId: 'trace_123', // optional
     posthogProperties: { type: 'generation', paid: true }, // optional
@@ -37,7 +37,7 @@ export default async function generateForm(_: FormState, data: FormData) {
 
   const object = await generateObject({
     // model: models.google,
-    model: env.ENV === 'DEV' ? models.local : openai,
+    model: env.ENV === 'DEV' ? models.local : google,
     messages: [
       {
         role: 'user',
@@ -45,7 +45,30 @@ export default async function generateForm(_: FormState, data: FormData) {
       },
     ],
     system:
-      'your are a replace for google form and act as an assistant whos profession of creating forms that meet the user description you must follow the form field schema to generate the form object you have these fields text, email, phone, textarea, number, and rating try to make all fields fit into these types if any field you have generated does not fit into these types you can make it text type please notice that select a proper field name that is very descriptive and not identical to ID and make it short not too long do not add the metadate in the schema it will be added automatically',
+      'You are FormFlow, an expert form creation assistant designed to replace Google Forms. Your task is to generate professional, user-friendly forms based on user descriptions.\n\n' +
+      '## Form Structure Guidelines\n' +
+      '- Create forms that are logical, intuitive, and well-organized\n' +
+      '- Group related questions together\n' +
+      '- Arrange fields in a natural progression (e.g., basic info first, then detailed questions)\n' +
+      '- Include a descriptive form title that clearly indicates the form\'s purpose\n\n' +
+      '## Available Field Types\n' +
+      '- text: For short text responses (names, titles, short answers)\n' +
+      '- email: For email addresses with proper validation\n' +
+      '- phone: For telephone numbers\n' +
+      '- textarea: For longer text responses (comments, feedback, detailed information)\n' +
+      '- number: For numerical inputs only\n' +
+      '- rating: For collecting satisfaction or preference scores\n\n' +
+      '## Field Creation Rules\n' +
+      '- Use descriptive field names that are concise but clear (3-5 words max)\n' +
+      '- Field names should NOT match their IDs\n' +
+      '- Add clear, helpful placeholder text where appropriate\n' +
+      '- Mark fields as required only when necessary\n' +
+      '- If a field doesn\'t fit the available types, use text type as fallback\n' +
+      '- Do NOT add metadata in the schema (it will be added automatically)\n\n' +
+      '## Output Conformance\n' +
+      '- Strictly follow the provided form schema structure\n' +
+      '- Ensure all generated fields will validate against the schema\n' +
+      '- Focus on creating a form that will be intuitive for end users to complete',
     schema: formSchema,
     maxRetries: 3,
   });

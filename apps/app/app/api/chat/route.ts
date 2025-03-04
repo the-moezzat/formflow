@@ -21,7 +21,8 @@ export const POST = async (req: Request) => {
 
   const phClient = analytics;
 
-  const openai = withTracing(models.chat, phClient, {
+  // Use type assertion to resolve version mismatch between dependencies
+  const openai = withTracing(models.google, phClient, {
     posthogDistinctId: authData.userId, // optional
     // posthogTraceId: 'trace_123', // optional
     posthogProperties: { type: 'generation', paid: true }, // optional
