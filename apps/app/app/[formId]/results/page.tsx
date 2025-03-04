@@ -2,22 +2,29 @@ import { Suspense } from 'react';
 import ResizableLayout from './_features/layout/resizable-layout';
 import ResponseTable from './_features/response-viewer/table-view/response-table';
 import { LoaderCircle } from 'lucide-react';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { getQueryClient } from '@repo/design-system/lib/get-query-client';
 
 async function Page({ params }: { params: Promise<{ formId: string }> }) {
   const formId = (await params).formId;
+  const queryClient = getQueryClient();
+
   return (
-    <ResizableLayout>
-      <Suspense
-        fallback={
-          <div className="flex h-full items-center justify-center gap-2">
-            <LoaderCircle className="shrink-0 animate-spin" />
-            {/* <div className="mt-2">Loading...</div> */}
-          </div>
-        }
-      >
-        <ResponseTable formId={formId} />
-      </Suspense>
-    </ResizableLayout>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ResizableLayout>
+        <Suspense
+          fallback={
+            <div className="flex h-full items-center justify-center gap-2">
+              <LoaderCircle className="shrink-0 animate-spin" />
+              {/* <div className="mt-2">Loading...</div> */}
+            </div>
+          }
+        >
+          <ResponseTable formId={formId} />
+        </Suspense>
+      </ResizableLayout>
+    </HydrationBoundary>
+
     // <div className="flex gap-2 ">
     //   <ResizablePanelGroup direction="horizontal" className="gap-2">
     //     <ResizablePanel>

@@ -40,6 +40,7 @@
     "@repo/auth": "workspace:*",
     "@repo/observability": "workspace:*",
     "@repo/schema-types": "workspace:*",
+    "@tanstack/react-query-devtools": "^5.67.1",
     "@types/pako": "^2.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -67,6 +68,9 @@
     "tailwind-merge": "^2.6.0",
     "vaul": "^1.1.2",
     "zod": "^3.24.1"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.67.1"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

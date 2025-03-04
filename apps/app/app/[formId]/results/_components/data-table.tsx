@@ -70,20 +70,15 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row, idx) => {
-              //   console.log('row', row);
-              console.log('cell', decodedResponses[idx]);
-
+            table.getRowModel().rows.map((row) => {
               return (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell, idx) => {
-                    // console.log('cell', decodedResponses[idx]);
+                  {row.getVisibleCells().map((cell) => {
                     return (
                       <TableCell key={cell.id}>
-                        {/* {decodedResponses[idx][cell.row.original.name]} */}
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()

@@ -8,10 +8,21 @@ import {
 import { ArrowLeft, BrainCog } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';
 import type { ImperativePanelHandle } from 'react-resizable-panels';
+import { Chatbot } from '../tools/chatbot/chatbot';
+import { Separator } from '@repo/design-system/components/ui/separator';
+import { useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { fetchFormResponses } from '../../_actions/form-responses';
 
 function ResizableLayout({ children }: { children: ReactNode }) {
   const [activeTool, setActiveTool] = useState(false);
+  const formId = useParams().formId as string;
   const toolsPane = useRef<ImperativePanelHandle>(null);
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['formResponses'],
+    queryFn: async () => await fetchFormResponses(formId),
+  });
 
   return (
     <ResizablePanelGroup direction="horizontal" className="gap-1">
@@ -51,8 +62,8 @@ function ResizableLayout({ children }: { children: ReactNode }) {
         )}
 
         {activeTool && (
-          <div className="h-full rounded-xl bg-accent p-2 text-gray-700">
-            <div className="flex items-center gap-1">
+          <div className="flex h-full flex-col gap-2 overflow-auto rounded-xl bg-accent p-2 text-gray-700">
+            <div className="flex items-center gap-1 ">
               <Button
                 size={'icon'}
                 variant={'ghost'}
@@ -67,6 +78,8 @@ function ResizableLayout({ children }: { children: ReactNode }) {
                 Fatten
               </span>
             </div>
+            <Separator />
+            {isLoading ? 'Loading' : <Chatbot formResponse={data ?? []} />}
           </div>
         )}
       </ResizablePanel>
