@@ -27,7 +27,9 @@ function ResizableLayout({ children }: { children: ReactNode }) {
   return (
     <ResizablePanelGroup direction="horizontal" className="gap-1">
       <ResizablePanel defaultSize={97} className="shrink">
-        <div className="h-full rounded-xl bg-accent p-4 ">{children}</div>
+        <div className="h-full overflow-auto rounded-xl bg-accent p-4">
+          {children}
+        </div>
       </ResizablePanel>
       <ResizableHandle
         disabled={!activeTool}
