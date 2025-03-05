@@ -4,11 +4,11 @@ import { z } from 'zod';
 export const keys = () =>
   createEnv({
     server: {
-      POSTGRES_PRISMA_URL: z.string().min(1).url(),
-      POSTGRES_URL_NON_POOLING: z.string().min(1).url(),
+      DATABASE_URL: z.string().min(1).url(),
+      DIRECT_URL: z.string().min(1).url(),
     },
     runtimeEnv: {
-      POSTGRES_PRISMA_URL: process.env.DATABASE_URL,
-      POSTGRES_URL_NON_POOLING: process.env.DIRECT_URL,
+      DATABASE_URL: process.env.DATABASE_URL,
+      DIRECT_URL: process.env.DIRECT_URL,
     },
   });
