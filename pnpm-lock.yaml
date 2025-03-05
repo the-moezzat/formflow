@@ -845,12 +845,6 @@ importers:
 
   packages/database:
     dependencies:
-      '@neondatabase/serverless':
-        specifier: ^0.10.4
-        version: 0.10.4
-      '@prisma/adapter-neon':
-        specifier: ^6.2.1
-        version: 6.2.1(@neondatabase/serverless@0.10.4)
       '@prisma/client':
         specifier: 6.4.1
         version: 6.4.1(prisma@6.4.1(typescript@5.7.3))(typescript@5.7.3)
@@ -860,12 +854,6 @@ importers:
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
-      undici:
-        specifier: ^7.3.0
-        version: 7.3.0
-      ws:
-        specifier: ^8.18.0
-        version: 8.18.0(bufferutil@4.0.9)
       zod:
         specifier: ^3.24.1
         version: 3.24.1
@@ -3359,9 +3347,6 @@ packages:
       '@types/react': '>=16'
       react: '>=16'
 
-  '@neondatabase/serverless@0.10.4':
-    resolution: {integrity: sha512-2nZuh3VUO9voBauuh+IGYRhGU/MskWHt1IuZvHcJw6GLjDgtqj/KViKo7SIrLdGLdot7vFbiRRw+BgEy3wT9HA==}
-
   '@next/bundle-analyzer@15.1.5':
     resolution: {integrity: sha512-pCYMPgGRwf+FjEwUXFo3QF14VzBSPPsBHSFuXUpq5ifKcY8LbcmoF2xMVVMa2HoYgA1XuqPSAIfLJr4YXNa9xQ==}
 
@@ -3851,11 +3836,6 @@ packages:
   '@posthog/ai@3.2.1':
     resolution: {integrity: sha512-n4hP5qSGj/BYk61QI5qha2gqeQcJFkHLXrKXJWL+4azKdUMc6UtowNHqE4pbc0J7Ux5lRsChytjFXhzjJbW6oA==}
 
-  '@prisma/adapter-neon@6.2.1':
-    resolution: {integrity: sha512-xpgxQB9f1Mcvoqukqwl765Iew/8uahFnSmdz3D/LcjE+AQqlNRT0HJlIC2u1z2Se/VzayansY9hImYs6jSf/ew==}
-    peerDependencies:
-      '@neondatabase/serverless': ^0.6.0 || ^0.7.0 || ^0.8.0 || ^0.9.0 || ^0.10.0
-
   '@prisma/client@6.2.1':
     resolution: {integrity: sha512-msKY2iRLISN8t5X0Tj7hU0UWet1u0KuxSPHWuf3IRkB4J95mCvGpyQBfQ6ufcmvKNOMQSq90O2iUmJEN2e5fiA==}
     engines: {node: '>=18.18'}
@@ -3882,9 +3862,6 @@ packages:
 
   '@prisma/debug@6.4.1':
     resolution: {integrity: sha512-Q9xk6yjEGIThjSD8zZegxd5tBRNHYd13GOIG0nLsanbTXATiPXCLyvlYEfvbR2ft6dlRsziQXfQGxAgv7zcMUA==}
-
-  '@prisma/driver-adapter-utils@6.2.1':
-    resolution: {integrity: sha512-Bx0z0jHekcokfckg2R0y9HO4F0LMrvTs8xgSoNpbnA5wtc83VwsaLrQFlZ7AKupAGIUpd+9X+MmNQQ0ES/7Vhw==}
 
   '@prisma/engines-version@6.2.0-14.4123509d24aa4dede1e864b46351bf2790323b69':
     resolution: {integrity: sha512-7tw1qs/9GWSX6qbZs4He09TOTg1ff3gYsB3ubaVNN0Pp1zLm9NC5C5MZShtkz7TyQjx7blhpknB7HwEhlG+PrQ==}
@@ -11648,10 +11625,6 @@ packages:
     resolution: {integrity: sha512-zICwjrDrcrUE0pyyJc1I2QzBkLM8FINsgOrt6WjA+BgajVq9Nxu2PbFFXUrAggLfDXlZGZBVZYw7WNV5KiBiBA==}
     engines: {node: '>=14.0'}
 
-  undici@7.3.0:
-    resolution: {integrity: sha512-Qy96NND4Dou5jKoSJ2gm8ax8AJM/Ey9o9mz7KN1bb9GP+G0l20Zw8afxTnY2f4b7hmhn/z8aC2kfArVQlAhFBw==}
-    engines: {node: '>=20.18.1'}
-
   unicode-canonical-property-names-ecmascript@2.0.1:
     resolution: {integrity: sha512-dA8WbNeb2a6oQzAQ55YlT5vQAWGV9WXOsi3SskE3bcCdM0P4SDd+24zS/OCacdRq5BkdsRj9q3Pg6YyQoxIGqg==}
     engines: {node: '>=4'}
@@ -14264,10 +14237,6 @@ snapshots:
       '@types/react': 19.0.1
       react: 18.3.1
 
-  '@neondatabase/serverless@0.10.4':
-    dependencies:
-      '@types/pg': 8.11.6
-
   '@next/bundle-analyzer@15.1.5(bufferutil@4.0.9)':
     dependencies:
       webpack-bundle-analyzer: 4.10.1(bufferutil@4.0.9)
@@ -14801,12 +14770,6 @@ snapshots:
       - typeorm
       - ws
 
-  '@prisma/adapter-neon@6.2.1(@neondatabase/serverless@0.10.4)':
-    dependencies:
-      '@neondatabase/serverless': 0.10.4
-      '@prisma/driver-adapter-utils': 6.2.1
-      postgres-array: 3.0.2
-
   '@prisma/client@6.2.1(prisma@6.4.1(typescript@5.7.3))':
     optionalDependencies:
       prisma: 6.4.1(typescript@5.7.3)
@@ -14819,10 +14782,6 @@ snapshots:
   '@prisma/debug@6.2.1': {}
 
   '@prisma/debug@6.4.1': {}
-
-  '@prisma/driver-adapter-utils@6.2.1':
-    dependencies:
-      '@prisma/debug': 6.2.1
 
   '@prisma/engines-version@6.2.0-14.4123509d24aa4dede1e864b46351bf2790323b69': {}
 
@@ -24449,8 +24408,6 @@ snapshots:
   undici@5.28.5:
     dependencies:
       '@fastify/busboy': 2.1.1
-
-  undici@7.3.0: {}
 
   unicode-canonical-property-names-ecmascript@2.0.1: {}
 
