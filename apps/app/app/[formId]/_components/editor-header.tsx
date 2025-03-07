@@ -29,6 +29,7 @@ import { useParams } from 'next/navigation';
 function EditorHeader() {
   const { title: formTitle } = useFormData();
   const { formId } = useParams();
+
   return (
     <header className="flex items-center justify-between">
       <div className="flex items-center gap-3">
