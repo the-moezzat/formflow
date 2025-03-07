@@ -9,15 +9,36 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "denoland.vscode-deno"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
+  "deno.enablePaths": [
+    "supabase/functions"
+  ],
+  "deno.lint": true,
+  "deno.unstable": [
+    "bare-node-builtins",
+    "byonm",
+    "sloppy-imports",
+    "unsafe-proto",
+    "webgpu",
+    "broadcast-channel",
+    "worker-options",
+    "cron",
+    "kv",
+    "ffi",
+    "fs",
+    "http",
+    "net"
+  ],
+  "doppler.autocomplete.enable": true,
+  "doppler.hover.enable": true,
   "editor.codeActionsOnSave": {
     "quickfix.biome": "explicit",
-    "source.organizeImports.biome": "explicit",
-    "source.fixAll.biome": "always"
+    "source.fixAll.biome": "always",
+    "source.organizeImports.biome": "explicit"
   },
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnPaste": true,
@@ -25,7 +46,5 @@
   "emmet.showExpandedAbbreviation": "never",
   "prettier.enable": false,
   "tailwindCSS.experimental.configFile": "./packages/tailwind-config/config.ts",
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "doppler.autocomplete.enable": true,
-  "doppler.hover.enable": true
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

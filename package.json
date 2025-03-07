@@ -17,6 +17,7 @@
     "db:migrate": "cd packages/database && npx drizzle-kit migrate",
     "db:generate": "cd packages/database && npx drizzle-kit generate",
     "db:pull": "cd packages/database && npx drizzle-kit pull",
+    "db:push": "cd packages/database && npx drizzle-kit push",
     "clean": "git clean -xdf node_modules"
   },
   "devDependencies": {
