@@ -1,12 +1,13 @@
 import { env } from '@/env';
 import { auth } from '@repo/auth/server';
+import { database } from '@repo/database';
+import { form } from '@repo/database/schema';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import { AvatarStack } from './components/avatar-stack';
 import { Cursors } from './components/cursors';
 import { Header } from './components/header';
-import { database } from '@repo/database';
 
 const title = 'Acme Inc';
 const description = 'My application.';
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
 };
 
 const App = async () => {
-  const forms = await database.form.findMany();
+  const forms = await database.select().from(form);
 
   const { orgId } = await auth();
 

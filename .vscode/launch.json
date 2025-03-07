@@ -41,7 +41,7 @@
       "name": "Next.js: debug client-side (studio)",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:3005"
+      "url": "https://local.drizzle.studio?port=3005"
     },
     {
       "name": "Next.js: debug full stack",

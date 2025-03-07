@@ -1,6 +1,13 @@
 import 'server-only';
-import { PrismaClient } from '@prisma/client';
 
-export const database = new PrismaClient();
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import { keys } from './keys';
 
-export * from '@prisma/client';
+const connectionString = keys().DATABASE_URL;
+
+// Disable prefetch as it is not supported for "Transaction" pool mode
+const client = postgres(connectionString, { prepare: false });
+
+export const database = drizzle(client);
+export * from 'drizzle-orm';
