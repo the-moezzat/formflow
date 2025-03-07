@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import FormflowBadge from './_components/formflow-badge';
 import Form from './_components/form';
 import { ModeToggle } from '@repo/design-system/components/mode-toggle';
-import { database } from '@repo/database';
+import { database, eq } from '@repo/database';
+import { form as formSchema } from '@repo/database/schema';
 import { decodeJsonData } from '@/utils/formEncoder';
 import type { GeneratedForm } from '@repo/schema-types/types';
 
@@ -16,17 +17,16 @@ export const metadata: Metadata = {
 
 const App = async ({ params }: { params: Promise<{ formId: string }> }) => {
   const { formId } = await params;
-  const form = await database.form.findUnique({
-    where: {
-      id: formId,
-    },
-  });
+  const form = await database
+    .select()
+    .from(formSchema)
+    .where(eq(formSchema.id, formId));
 
   if (!form) {
     return <div>Form not found</div>;
   }
 
-  const decodedForm = decodeJsonData<GeneratedForm>(form.encodedForm);
+  const decodedForm = decodeJsonData<GeneratedForm>(form[0].encodedForm);
 
   return (
     <>
