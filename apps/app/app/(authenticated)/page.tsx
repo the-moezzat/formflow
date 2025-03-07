@@ -7,6 +7,7 @@ import { AvatarStack } from './components/avatar-stack';
 import { Cursors } from './components/cursors';
 import { Header } from './components/header';
 import { database } from '@repo/database';
+import { form } from '@repo/database/drizzle/schema';
 
 const title = 'Acme Inc';
 const description = 'My application.';
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
 };
 
 const App = async () => {
-  const forms = await database.form.findMany();
+  const forms = await database.select().from(form);
 
   const { orgId } = await auth();
 

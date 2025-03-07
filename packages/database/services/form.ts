@@ -1,6 +1,7 @@
-// lib/forms.ts
-
-import { database as prisma } from '../index';
+import { randomUUID } from 'node:crypto';
+import { eq } from 'drizzle-orm';
+import { form, formResponse } from '../drizzle/schema';
+import { database } from '../index';
 
 export async function createForm({
   userId,
@@ -11,14 +12,17 @@ export async function createForm({
   title: string;
   encodedForm: string;
 }) {
-  return await prisma.form.create({
-    data: {
+  return await database
+    .insert(form)
+    .values({
+      id: randomUUID(),
       userId,
       title,
       encodedForm,
       formHistory: [],
-    },
-  });
+      updatedAt: new Date().toISOString(),
+    })
+    .returning();
 }
 
 export async function updateForm({
@@ -31,9 +35,10 @@ export async function updateForm({
   newEncodedForm?: string;
 }) {
   // First get the current form
-  const currentForm = await prisma.form.findUnique({
-    where: { id: formId },
-  });
+  const [currentForm] = await database
+    .select()
+    .from(form)
+    .where(eq(form.id, formId));
 
   if (!currentForm) {
     throw new Error('Form not found');
@@ -41,21 +46,24 @@ export async function updateForm({
 
   // If we're updating the form content, add current version to history
   const formHistory = newEncodedForm
-    ? [...currentForm.formHistory, currentForm.encodedForm]
-    : currentForm.formHistory;
+    ? [...(currentForm.formHistory ?? []), currentForm.encodedForm]
+    : (currentForm.formHistory ?? []);
 
-  return prisma.form.update({
-    where: { id: formId },
-    data: {
+  const [updatedForm] = await database
+    .update(form)
+    .set({
       title: title ?? currentForm.title,
       encodedForm: newEncodedForm ?? currentForm.encodedForm,
       formHistory,
       currentVersion: newEncodedForm
         ? currentForm.currentVersion + 1
         : currentForm.currentVersion,
-      updatedAt: new Date(),
-    },
-  });
+      updatedAt: new Date().toISOString(),
+    })
+    .where(eq(form.id, formId))
+    .returning();
+
+  return updatedForm;
 }
 
 export async function revertFormVersion({
@@ -65,30 +73,36 @@ export async function revertFormVersion({
   formId: string;
   versionIndex: number;
 }) {
-  const form = await prisma.form.findUnique({
-    where: { id: formId },
-  });
+  const [currentForm] = await database
+    .select()
+    .from(form)
+    .where(eq(form.id, formId));
 
-  if (!form) {
+  if (!currentForm) {
     throw new Error('Form not found');
   }
 
-  if (versionIndex >= form.formHistory.length) {
+  const history = currentForm.formHistory ?? [];
+
+  if (versionIndex >= history.length) {
     throw new Error('Version not found');
   }
 
-  const targetVersion = form.formHistory[versionIndex];
-  const newHistory = [...form.formHistory, form.encodedForm];
+  const targetVersion = history[versionIndex];
+  const newHistory = [...history, currentForm.encodedForm];
 
-  return prisma.form.update({
-    where: { id: formId },
-    data: {
+  const [updatedForm] = await database
+    .update(form)
+    .set({
       encodedForm: targetVersion,
       formHistory: newHistory,
-      currentVersion: form.currentVersion + 1,
-      updatedAt: new Date(),
-    },
-  });
+      currentVersion: currentForm.currentVersion + 1,
+      updatedAt: new Date().toISOString(),
+    })
+    .where(eq(form.id, formId))
+    .returning();
+
+  return updatedForm;
 }
 
 export async function createFormResponse({
@@ -103,43 +117,56 @@ export async function createFormResponse({
   userAgent?: string;
 }) {
   // Get current form version
-  const form = await prisma.form.findUnique({
-    where: { id: formId },
-  });
+  const [currentForm] = await database
+    .select()
+    .from(form)
+    .where(eq(form.id, formId));
 
-  if (!form) {
+  if (!currentForm) {
     throw new Error('Form not found');
   }
 
   // Create response and increment response count in transaction
-  return prisma.$transaction([
-    prisma.formResponse.create({
-      data: {
+  return await database.transaction(async (tx) => {
+    const [response] = await tx
+      .insert(formResponse)
+      .values({
+        id: randomUUID(),
         formId,
-        formVersion: form.currentVersion,
+        formVersion: currentForm.currentVersion,
         encodedResponse,
         submitterIp,
         userAgent,
-      },
-    }),
-    prisma.form.update({
-      where: { id: formId },
-      data: {
-        responseCount: {
-          increment: 1,
-        },
-      },
-    }),
-  ]);
+      })
+      .returning();
+
+    const [updatedForm] = await tx
+      .update(form)
+      .set({
+        responseCount: currentForm.responseCount + 1,
+      })
+      .where(eq(form.id, formId))
+      .returning();
+
+    return [response, updatedForm];
+  });
 }
 
 export async function incrementFormView(formId: string) {
-  return await prisma.form.update({
-    where: { id: formId },
-    data: {
-      viewCount: {
-        increment: 1,
-      },
-    },
-  });
+  const [currentForm] = await database
+    .select()
+    .from(form)
+    .where(eq(form.id, formId));
+
+  if (!currentForm) {
+    throw new Error('Form not found');
+  }
+
+  return await database
+    .update(form)
+    .set({
+      viewCount: currentForm.viewCount + 1,
+    })
+    .where(eq(form.id, formId))
+    .returning();
 }

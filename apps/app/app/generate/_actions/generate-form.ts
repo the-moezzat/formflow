@@ -50,7 +50,7 @@ export default async function generateForm(_: FormState, data: FormData) {
       '- Create forms that are logical, intuitive, and well-organized\n' +
       '- Group related questions together\n' +
       '- Arrange fields in a natural progression (e.g., basic info first, then detailed questions)\n' +
-      '- Include a descriptive form title that clearly indicates the form\'s purpose\n\n' +
+      "- Include a descriptive form title that clearly indicates the form's purpose\n\n" +
       '## Available Field Types\n' +
       '- text: For short text responses (names, titles, short answers)\n' +
       '- email: For email addresses with proper validation\n' +
@@ -63,7 +63,7 @@ export default async function generateForm(_: FormState, data: FormData) {
       '- Field names should NOT match their IDs\n' +
       '- Add clear, helpful placeholder text where appropriate\n' +
       '- Mark fields as required only when necessary\n' +
-      '- If a field doesn\'t fit the available types, use text type as fallback\n' +
+      "- If a field doesn't fit the available types, use text type as fallback\n" +
       '- Do NOT add metadata in the schema (it will be added automatically)\n\n' +
       '## Output Conformance\n' +
       '- Strictly follow the provided form schema structure\n' +
@@ -93,7 +93,7 @@ export default async function generateForm(_: FormState, data: FormData) {
 
   log.info('Database form', databaseForm);
 
-  redirect(`/${databaseForm.id}?form=${encodeJsonData(form)}`);
+  redirect(`/${databaseForm[0].id}?form=${encodeJsonData(form)}`);
 
   return {
     prompt,
