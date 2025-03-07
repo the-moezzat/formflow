@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { eq } from 'drizzle-orm';
-import { form, formResponse } from '../drizzle/schema';
 import { database } from '../index';
+import { form, formResponse } from '../schema';
 
 export async function createForm({
   userId,

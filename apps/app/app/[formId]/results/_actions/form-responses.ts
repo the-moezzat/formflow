@@ -2,7 +2,7 @@
 
 import { decodeJsonData } from '@/utils/formEncoder';
 import { database, eq } from '@repo/database';
-import { formResponse } from '@repo/database/drizzle/schema';
+import { formResponse } from '@repo/database/schema';
 
 // Define a more specific type for form response data
 type FormResponseData = Record<string, unknown>;

@@ -1,6 +1,6 @@
 import { decodeJsonData } from '@/utils/formEncoder';
 import { database, eq } from '@repo/database';
-import { form, formResponse } from '@repo/database/drizzle/schema';
+import { form, formResponse } from '@repo/database/schema';
 import type { GeneratedForm } from '@repo/schema-types/types';
 import { DataTable } from '../../../_components/data-table';
 
