@@ -4,9 +4,11 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "analyze": "prisma generate --no-hints",
-    "build": "prisma generate --no-hints",
+    "analyze": "drizzle-kit check",
+    "build": "drizzle-kit generate",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
