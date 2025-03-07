@@ -1,7 +1,8 @@
 import { auth } from '@repo/auth/server';
-import { database } from '@repo/database';
+import { database, eq } from '@repo/database';
 import { notFound, redirect } from 'next/navigation';
 import { Header } from '../components/header';
+import { form } from '@repo/database/schema';
 
 type SearchPageProperties = {
   searchParams: Promise<{
@@ -22,13 +23,9 @@ export const generateMetadata = async ({
 
 const SearchPage = async ({ searchParams }: SearchPageProperties) => {
   const { q } = await searchParams;
-  const pages = await database.page.findMany({
-    where: {
-      name: {
-        contains: q,
-      },
-    },
-  });
+
+  const forms = await database.select().from(form).where(eq(form.title, q));
+
   const { orgId } = await auth();
 
   if (!orgId) {
@@ -44,9 +41,9 @@ const SearchPage = async ({ searchParams }: SearchPageProperties) => {
       <Header pages={['Building Your Application']} page="Search" />
       <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
         <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-          {pages.map((page) => (
+          {forms.map((page) => (
             <div key={page.id} className="aspect-video rounded-xl bg-muted/50">
-              {page.name}
+              {page.title}
             </div>
           ))}
         </div>
