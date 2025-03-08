@@ -6,7 +6,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbSeparator,
-  BreadcrumbPage,
 } from '@repo/design-system/components/ui/breadcrumb';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Feather, SendHorizontal } from 'lucide-react';
@@ -16,7 +15,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@repo/design-system/components/ui/avatar';
-import { useFormData } from '../_hooks/use-form-data';
 import {
   Popover,
   PopoverContent,
@@ -25,9 +23,16 @@ import {
 import InputCopy from '@repo/design-system/components/input-copy';
 import { env } from '@/env';
 import { useParams } from 'next/navigation';
+import { useQueryState } from 'nuqs';
 
 function EditorHeader() {
-  const { title: formTitle } = useFormData();
+  const [encodedForm, setEncodedForm] = useQueryState('form', {});
+
+  if (!encodedForm) {
+    return null;
+  }
+
+  // const { title: formTitle } = useFormData();
   const { formId } = useParams();
 
   return (
@@ -41,11 +46,11 @@ function EditorHeader() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>
+              {/* <BreadcrumbPage>
                 {formTitle?.length > 15
                   ? `${formTitle.slice(0, 15)}.....`
                   : formTitle}
-              </BreadcrumbPage>
+              </BreadcrumbPage> */}
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

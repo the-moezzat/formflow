@@ -1,8 +1,8 @@
-'use server';
+"use server";
 
-import { decodeJsonData } from '@/utils/formEncoder';
-import { database, eq } from '@repo/database';
-import { formResponse } from '@repo/database/schema';
+import { decodeJsonData } from "@/utils/formEncoder";
+import { database, eq } from "@repo/database";
+import { formResponse } from "@repo/database/schema";
 
 // Define a more specific type for form response data
 type FormResponseData = Record<string, unknown>;
@@ -18,11 +18,9 @@ export async function fetchFormResponses(formId: string) {
     const decodedResponses = responses.map((response) => {
       return decodeJsonData<FormResponseData>(response.encodedResponse);
     });
-
-    console.log('Fetched form responses:', decodedResponses);
     return decodedResponses;
   } catch (error) {
-    console.error('Error fetching form responses:', error);
-    throw new Error('Failed to fetch form responses');
+    console.error("Error fetching form responses:", error);
+    throw new Error("Failed to fetch form responses");
   }
 }
