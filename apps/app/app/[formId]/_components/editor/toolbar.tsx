@@ -10,8 +10,9 @@ import {
 } from 'lucide-react';
 import Settings from './toolbar-actions/settings';
 import EditWithAi from './toolbar-actions/edit-with-ai';
+import VersionDialog from '../../_features/version-contorl/version-dialog';
 
-function Toolbar() {
+function Toolbar({ formId }: { formId: string }) {
   return (
     <div className="sticky top-0 z-50 mx-auto flex w-full items-center gap-2 rounded-xl border border-accent bg-accent/60 p-1 backdrop-blur-sm">
       <Button variant="outline">
@@ -41,9 +42,7 @@ function Toolbar() {
       >
         <Play />
       </Button>
-
       <Separator orientation="vertical" className="h-4" />
-
       <Button
         variant="ghost"
         size={'icon'}
@@ -51,6 +50,7 @@ function Toolbar() {
       >
         <Accessibility />
       </Button>
+      <VersionDialog formId={formId} />
       <Button
         variant="ghost"
         size={'icon'}
@@ -58,9 +58,7 @@ function Toolbar() {
       >
         <Languages />
       </Button>
-
       <Settings />
-
       <EditWithAi />
     </div>
   );

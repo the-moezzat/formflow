@@ -199,6 +199,9 @@ importers:
       '@types/pako':
         specifier: ^2.0.3
         version: 2.0.3
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       fuse.js:
         specifier: ^7.0.0
         version: 7.0.0
@@ -235,6 +238,9 @@ importers:
       require-in-the-middle:
         specifier: ^7.4.0
         version: 7.4.0
+      sonner:
+        specifier: ^1.7.2
+        version: 1.7.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       swapy:
         specifier: ^1.0.5
         version: 1.0.5

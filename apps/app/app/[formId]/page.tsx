@@ -16,8 +16,8 @@ export type PageProps = {
   }>;
 };
 
-function Page() {
-  // This only runs when form param exists
+async function Page({ params }: PageProps) {
+  const formId = (await params).formId;
   return (
     <div className="grid h-[calc(100vh-74px)] grid-cols-[4fr,16fr,4fr] grid-rows-[auto,1fr] gap-4 overflow-y-scroll">
       <div className="col-start-1 row-span-2 rounded-2xl ">
@@ -25,7 +25,7 @@ function Page() {
           <FieldsViewWrapper />
         </Suspense>
       </div>
-      <Toolbar />
+      <Toolbar formId={formId} />
       <Suspense>
         <FormPreviewSection />
       </Suspense>
