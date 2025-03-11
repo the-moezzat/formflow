@@ -20,6 +20,7 @@ export function FieldsViewWrapper() {
       <ResizablePanel
         className=" rounded-xl border border-accent bg-accent/60"
         minSize={70}
+        defaultSize={70}
       >
         <div className="h-full overflow-y-auto">
           <FieldsView
@@ -31,6 +32,7 @@ export function FieldsViewWrapper() {
       <ResizablePanel
         className="rounded-xl border border-accent bg-accent/60"
         minSize={10}
+        defaultSize={30}
       >
         <div className="flex flex-col gap-4 p-4">
           <div className="flex items-center justify-between">

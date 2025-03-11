@@ -8,8 +8,7 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from '@repo/design-system/components/ui/breadcrumb';
-import { Button } from '@repo/design-system/components/ui/button';
-import { Feather, SendHorizontal } from 'lucide-react';
+import { Feather } from 'lucide-react';
 import { EditorNav } from './editor-nav';
 import {
   Avatar,
@@ -17,18 +16,10 @@ import {
   AvatarImage,
 } from '@repo/design-system/components/ui/avatar';
 import { useFormData } from '../_hooks/use-form-data';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@repo/design-system/components/ui/popover';
-import InputCopy from '@repo/design-system/components/input-copy';
-import { env } from '@/env';
-import { useParams } from 'next/navigation';
+import Publish from '../_features/publish-form/publish';
 
 function EditorHeader() {
   const { title: formTitle } = useFormData();
-  const { formId } = useParams();
 
   return (
     <header className="flex items-center justify-between">
@@ -55,24 +46,7 @@ function EditorHeader() {
         <EditorNav />
       </div>
       <div className="flex items-center gap-4">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="default">
-              <SendHorizontal /> Publish
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent side="bottom" className="w-96 space-y-4">
-            <div className="flex flex-col gap-1">
-              <h3 className="font-bold text-lg text-neutral-700 dark:text-neutral-100">
-                Publish Your Form
-              </h3>
-              <p className="text-neutral-600 text-sm dark:text-neutral-400">
-                Once published, your form will go live.
-              </p>
-            </div>
-            <InputCopy value={`${env.NEXT_PUBLIC_PREVIEW_URL}/${formId}`} />
-          </PopoverContent>
-        </Popover>
+        <Publish />
 
         <ModeToggle />
         <Avatar className="h-8 w-8">

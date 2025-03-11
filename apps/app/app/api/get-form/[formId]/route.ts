@@ -1,24 +1,29 @@
 // app/api/get-form/[formId]/route.ts
-import { NextResponse } from 'next/server';
-import { database } from '@repo/database';
+import { type NextRequest, NextResponse } from "next/server";
+import { database, eq } from "@repo/database";
+import { form } from "@repo/database/schema";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { formId: string } }
-) {
-  const formId = params.formId;
+export async function GET(request: NextRequest) {
+  const formId = request.nextUrl.pathname.split("/").pop();
+  console.log("----Form ID", formId);
+  if (!formId) {
+    return NextResponse.json({ error: "Missing form ID" }, { status: 400 });
+  }
 
   try {
-    const formData = await database.form.findUnique({
-      where: { id: formId },
-      select: { encodedForm: true },
-    });
+    const [formData] = await database
+      .select()
+      .from(form)
+      .where(eq(form.id, formId));
 
-    return NextResponse.json({
-      encodedForm: formData?.encodedForm || null,
-    });
+    console.log("----Form response", formData);
+
+    if (!formData) {
+      return NextResponse.json({ encodedForm: null }, { status: 404 });
+    }
+
+    return NextResponse.json({ form: formData });
   } catch (error) {
-    console.error('Error fetching form:', error);
     return NextResponse.json({ encodedForm: null }, { status: 500 });
   }
 }
