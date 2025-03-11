@@ -16,7 +16,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^3.10.0",
-    "@prisma/client": "6.2.1",
+    "@prisma/client": "6.4.1",
     "@radix-ui/react-dialog": "^1.1.4",
     "@repo/analytics": "workspace:*",
     "@repo/auth": "workspace:*",
