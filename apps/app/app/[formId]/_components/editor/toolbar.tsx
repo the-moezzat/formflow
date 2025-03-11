@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import Settings from './toolbar-actions/settings';
 import EditWithAi from './toolbar-actions/edit-with-ai';
-import VersionDialog from '../../_features/version-contorl/version-dialog';
+import VersionHistory from '../../_features/version-contorl/version-dialog';
 
 function Toolbar({ formId }: { formId: string }) {
   return (
@@ -50,7 +50,7 @@ function Toolbar({ formId }: { formId: string }) {
       >
         <Accessibility />
       </Button>
-      <VersionDialog formId={formId} />
+      <VersionHistory formId={formId} />
       <Button
         variant="ghost"
         size={'icon'}

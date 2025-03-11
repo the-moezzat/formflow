@@ -1,7 +1,9 @@
-import { randomUUID } from 'node:crypto';
-import { eq } from 'drizzle-orm';
-import { database } from '../index';
-import { form, formResponse } from '../schema';
+"use server";
+
+import { randomUUID } from "node:crypto";
+import { eq } from "drizzle-orm";
+import { database } from "../index";
+import { form, formResponse } from "../schema";
 
 export async function createForm({
   userId,
@@ -19,7 +21,7 @@ export async function createForm({
       userId,
       title,
       encodedForm,
-      formHistory: [],
+      formHistory: [encodedForm],
       updatedAt: new Date().toISOString(),
     })
     .returning();
@@ -41,12 +43,12 @@ export async function updateForm({
     .where(eq(form.id, formId));
 
   if (!currentForm) {
-    throw new Error('Form not found');
+    throw new Error("Form not found");
   }
 
   // If we're updating the form content, add current version to history
   const formHistory = newEncodedForm
-    ? [...(currentForm.formHistory ?? []), currentForm.encodedForm]
+    ? [...(currentForm.formHistory ?? []), newEncodedForm]
     : (currentForm.formHistory ?? []);
 
   const [updatedForm] = await database
@@ -79,25 +81,30 @@ export async function revertFormVersion({
     .where(eq(form.id, formId));
 
   if (!currentForm) {
-    throw new Error('Form not found');
+    throw new Error("Form not found");
   }
 
   const history = currentForm.formHistory ?? [];
 
   if (versionIndex >= history.length) {
-    throw new Error('Version not found');
+    throw new Error("Version not found");
   }
-
   const targetVersion = history[versionIndex];
-  const newHistory = [...history, currentForm.encodedForm];
+
+  const isVersionPresent = history.some((version) =>
+    version === currentForm.encodedForm
+  );
+  const newVersionHistory = isVersionPresent
+    ? history
+    : [...history, currentForm.encodedForm];
 
   const [updatedForm] = await database
     .update(form)
     .set({
       encodedForm: targetVersion,
-      formHistory: newHistory,
       currentVersion: currentForm.currentVersion + 1,
       updatedAt: new Date().toISOString(),
+      formHistory: newVersionHistory,
     })
     .where(eq(form.id, formId))
     .returning();
@@ -123,7 +130,7 @@ export async function createFormResponse({
     .where(eq(form.id, formId));
 
   if (!currentForm) {
-    throw new Error('Form not found');
+    throw new Error("Form not found");
   }
 
   // Create response and increment response count in transaction
@@ -159,7 +166,7 @@ export async function incrementFormView(formId: string) {
     .where(eq(form.id, formId));
 
   if (!currentForm) {
-    throw new Error('Form not found');
+    throw new Error("Form not found");
   }
 
   return await database

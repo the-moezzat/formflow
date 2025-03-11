@@ -1,19 +1,67 @@
+'use client';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@repo/design-system/components/ui/dialog';
 import { GitCompareArrows } from 'lucide-react';
-import { Suspense } from 'react';
-import VersionList from './version-list';
+import { useState } from 'react';
+import { useVersionHistoryStore } from './store';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { revertFormVersion } from '@repo/database/services/form';
+import { toast } from 'sonner';
+import { useQueryState } from 'nuqs';
+import Versions from './versions';
 
-function VersionDialog({ formId }: { formId: string }) {
+function VersionHistory({ formId }: { formId: string }) {
+  const queryClient = useQueryClient();
+  const { selectedVersion, setSelectedVersion } = useVersionHistoryStore();
+  const [isOpen, setIsOpen] = useState(false);
+  const [_, setFrom] = useQueryState('form');
+  const { mutate, data, isPending } = useMutation({
+    mutationFn: async () => {
+      if (selectedVersion === null) {
+        return;
+      }
+      const revertForm = await revertFormVersion({
+        formId,
+        versionIndex: selectedVersion,
+      });
+
+      return revertForm;
+    },
+    onMutate: () => {
+      toast.loading('Restoring version...', {
+        id: 'restore-version',
+      });
+      setIsOpen(false);
+    },
+    onSuccess: (data) => {
+      toast.success('Version restored successfully', {
+        id: 'restore-version',
+      });
+
+      setFrom(data?.encodedForm || '');
+
+      // Revalidate related queries
+      queryClient.invalidateQueries({ queryKey: ['form-versions', formId] });
+    },
+  });
+
   return (
-    <Dialog>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        setSelectedVersion(null);
+        setIsOpen(open);
+      }}
+    >
       <DialogTrigger asChild>
         <Button
           variant="ghost"
@@ -23,7 +71,7 @@ function VersionDialog({ formId }: { formId: string }) {
           <GitCompareArrows />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Version History</DialogTitle>
           <DialogDescription>
@@ -31,16 +79,23 @@ function VersionDialog({ formId }: { formId: string }) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4 rounded-xl bg-accent p-4">
-          <h3 className="text-neutral-700">Recently published versions</h3>
+        <Versions formId={formId} />
 
-          <Suspense fallback={<div>Loading...</div>}>
-            <VersionList formId={formId} />
-          </Suspense>
-        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="ghost">Close</Button>
+          </DialogClose>
+          <Button
+            variant="default"
+            disabled={(!selectedVersion && selectedVersion !== 0) || isPending}
+            onClick={() => mutate()}
+          >
+            {isPending ? 'Restoring' : 'Restore'}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
 
-export default VersionDialog;
+export default VersionHistory;

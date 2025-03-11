@@ -17,12 +17,39 @@ import { cn } from '@repo/design-system/lib/utils';
 import { saveChange } from '../../_actions/save-changes';
 import { decodeJsonData, encodeJsonData } from '@/utils/formEncoder';
 import type { GeneratedForm } from '@repo/schema-types/types';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 
 export function Publish() {
   const formId = useParams().formId as string;
   const { changed, reset } = useUrlWatcher();
-  const [form] = useQueryState('form');
+  const [form, setFrom] = useQueryState('form');
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  const publishMutation = useMutation({
+    mutationFn: async ({
+      formId,
+      newEncodedForm,
+    }: { formId: string; newEncodedForm: string }) => {
+      return await saveChange({ formId, newEncodedForm });
+    },
+    onMutate: () => {
+      const loadingToast = toast.loading('Publishing...');
+      return { loadingToast };
+    },
+    onSuccess: (_, __, context) => {
+      toast.success('Form published successfully', {
+        id: context?.loadingToast,
+      });
+      reset();
+
+      queryClient.invalidateQueries({ queryKey: ['form-versions', formId] });
+    },
+    onError: (error, _, context) => {
+      toast.error('Failed to publish form', { id: context?.loadingToast });
+      console.error('Publishing error:', error);
+    },
+  });
 
   const handlePublish = async () => {
     if (!changed) {
@@ -31,7 +58,6 @@ export function Publish() {
     }
 
     setOpen(false);
-    const loadingToast = toast.loading('Publishing...');
 
     // update new form metadata
     const newForm = decodeJsonData<GeneratedForm>(form as string);
@@ -43,9 +69,11 @@ export function Publish() {
     // encode new form
     const newEncodedForm = encodeJsonData(newForm);
 
-    await saveChange({ formId, newEncodedForm });
-    toast.success('Form published successfully', { id: loadingToast });
-    reset();
+    // Update state before API call for optimistic updates
+    setFrom(newEncodedForm);
+
+    // Trigger the mutation
+    publishMutation.mutate({ formId, newEncodedForm });
   };
 
   return (
