@@ -2,7 +2,8 @@ import { chain } from "./utils/chain";
 import { baseMiddleware } from "./middleware/base-middleware";
 // import { formMiddleware } from "./middleware/form-redirect-middleware";
 
-export default chain([baseMiddleware// formMiddleware
+// The formMiddleware is currently commented out and not included in the chain.
+export default chain([baseMiddleware
 ]);
 
 export const config = {
