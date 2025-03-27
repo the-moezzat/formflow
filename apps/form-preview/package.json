@@ -14,7 +14,7 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
-    "@prisma/client": "6.2.1",
+    "@prisma/client": "6.4.1",
     "@repo/analytics": "workspace:*",
     "@repo/auth": "workspace:*",
     "@repo/collaboration": "workspace:*",
