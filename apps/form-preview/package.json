@@ -41,7 +41,7 @@
     "pako": "^2.1.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "require-in-the-middle": "^7.4.0",
+    "require-in-the-middle": "^7.5.2",
     "sonner": "^1.7.2",
     "swapy": "^1.0.5",
     "zod": "^3.24.1"
