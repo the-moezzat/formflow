@@ -12,7 +12,7 @@ import Settings from './toolbar-actions/settings';
 import EditWithAi from './toolbar-actions/edit-with-ai';
 import VersionHistory from '../../_features/version-contorl/version-dialog';
 
-function Toolbar({ formId }: { formId: string }) {
+function Toolbar() {
   return (
     <div className="sticky top-0 z-50 mx-auto flex w-full items-center gap-2 rounded-xl border border-accent bg-accent/60 p-1 backdrop-blur-sm">
       <Button variant="outline">
@@ -50,7 +50,7 @@ function Toolbar({ formId }: { formId: string }) {
       >
         <Accessibility />
       </Button>
-      <VersionHistory formId={formId} />
+      <VersionHistory />
       <Button
         variant="ghost"
         size={'icon'}

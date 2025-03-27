@@ -15,11 +15,11 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@repo/design-system/components/ui/avatar';
-import { useFormData } from '../_hooks/use-form-data';
 import Publish from '../_features/publish-form/publish';
+import { useFormflow } from '../_hooks/use-formflow';
 
 function EditorHeader() {
-  const { title: formTitle } = useFormData();
+  const { decodedFormData } = useFormflow();
 
   return (
     <header className="flex items-center justify-between">
@@ -32,11 +32,15 @@ function EditorHeader() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>
-                {formTitle?.length > 15
-                  ? `${formTitle.slice(0, 15)}.....`
-                  : formTitle}
-              </BreadcrumbPage>
+              {decodedFormData ? (
+                <BreadcrumbPage>
+                  {decodedFormData.title?.length > 15
+                    ? `${decodedFormData.title.slice(0, 15)}.....`
+                    : decodedFormData.title}
+                </BreadcrumbPage>
+              ) : (
+                <BreadcrumbPage>Form</BreadcrumbPage>
+              )}
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

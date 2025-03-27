@@ -1,16 +1,15 @@
 import type { FormField } from "@repo/schema-types/types";
-import { useFormData } from "./use-form-data";
-import { useQueryState } from "nuqs";
 import { encodeJsonData } from "@/utils/formEncoder";
+import { useFormflow } from "./use-formflow";
 
 export function useFieldAction({ field }: { field: FormField }) {
-    const form = useFormData();
-    const [_, setEncondedForm] = useQueryState("form");
+    const { decodedFormData: form, updateForm: setEncondedForm } =
+        useFormflow();
 
     function removeField() {
         const newForm = {
             ...form,
-            fields: form.fields.filter((f) => f.id !== field.id),
+            fields: form?.fields.filter((f) => f.id !== field.id),
         };
 
         const encodeNewForm = encodeJsonData(newForm);
@@ -20,6 +19,9 @@ export function useFieldAction({ field }: { field: FormField }) {
     }
 
     function dublicateField() {
+        if (!form) {
+            return;
+        }
         const newField = {
             ...field,
             id: `${field.id}-${Math.random()}`,

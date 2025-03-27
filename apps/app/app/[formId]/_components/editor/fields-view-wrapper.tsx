@@ -1,8 +1,5 @@
 'use client';
 import FieldsView from './fields-view';
-import { useQueryState } from 'nuqs';
-import type { GeneratedForm } from '@repo/schema-types/types';
-import { decodeJsonData } from '@/utils/formEncoder';
 import {
   ResizableHandle,
   ResizablePanel,
@@ -10,10 +7,10 @@ import {
 } from '@repo/design-system/components/ui/resizable';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Plus } from 'lucide-react';
+import { useFormflow } from '../../_hooks/use-formflow';
 
 export function FieldsViewWrapper() {
-  const [form] = useQueryState('form');
-  const decodedForm = decodeJsonData<GeneratedForm>(form || '');
+  const { decodedFormData } = useFormflow();
 
   return (
     <ResizablePanelGroup direction="vertical" className="space-y-2">
@@ -23,9 +20,14 @@ export function FieldsViewWrapper() {
         defaultSize={70}
       >
         <div className="h-full overflow-y-auto">
-          <FieldsView
-            key={`${JSON.stringify(decodedForm.metadata?.updatedAt)}`}
-          />
+          {decodedFormData ? (
+            <FieldsView
+              key={`${JSON.stringify(decodedFormData.metadata?.updatedAt)}`}
+              form={decodedFormData}
+            />
+          ) : (
+            <div>Loading...</div>
+          )}
         </div>
       </ResizablePanel>
       <ResizableHandle withHandle className=" bg-transparent" />

@@ -9,8 +9,6 @@ import { env } from '@/env';
 import { Button } from '@repo/design-system/components/ui/button';
 import { SendHorizontal } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { useUrlWatcher } from './use-url-watcher';
-import { useQueryState } from 'nuqs';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@repo/design-system/lib/utils';
@@ -18,13 +16,20 @@ import { saveChange } from '../../_actions/save-changes';
 import { decodeJsonData, encodeJsonData } from '@/utils/formEncoder';
 import type { GeneratedForm } from '@repo/schema-types/types';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { useFormflow } from '../../_hooks/use-formflow';
 
 export function Publish() {
   const formId = useParams().formId as string;
-  const { changed, reset } = useUrlWatcher();
-  const [form, setFrom] = useQueryState('form');
+
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
+
+  const {
+    isChanged,
+    resetChangeState,
+    encodedFormData: form,
+    updateForm,
+  } = useFormflow();
 
   const publishMutation = useMutation({
     mutationFn: async ({
@@ -41,9 +46,10 @@ export function Publish() {
       toast.success('Form published successfully', {
         id: context?.loadingToast,
       });
-      reset();
+      resetChangeState();
 
       queryClient.invalidateQueries({ queryKey: ['form-versions', formId] });
+      queryClient.invalidateQueries({ queryKey: ['form', formId] });
     },
     onError: (error, _, context) => {
       toast.error('Failed to publish form', { id: context?.loadingToast });
@@ -52,7 +58,7 @@ export function Publish() {
   });
 
   const handlePublish = async () => {
-    if (!changed) {
+    if (!isChanged) {
       setOpen((open) => !open);
       return;
     }
@@ -70,7 +76,7 @@ export function Publish() {
     const newEncodedForm = encodeJsonData(newForm);
 
     // Update state before API call for optimistic updates
-    setFrom(newEncodedForm);
+    updateForm(newEncodedForm);
 
     // Trigger the mutation
     publishMutation.mutate({ formId, newEncodedForm });
@@ -79,15 +85,15 @@ export function Publish() {
   return (
     <Popover
       open={open}
-      onOpenChange={(open) => (changed ? setOpen(false) : setOpen(open))}
+      onOpenChange={(open) => (isChanged ? setOpen(false) : setOpen(open))}
     >
       <PopoverTrigger asChild>
         <Button
-          variant={changed ? 'default' : 'secondary'}
+          variant={isChanged ? 'default' : 'secondary'}
           onClick={handlePublish}
           className={cn()}
         >
-          <SendHorizontal /> {changed ? 'Save & Publish' : 'Publish'}
+          <SendHorizontal /> {isChanged ? 'Save & Publish' : 'Publish'}
         </Button>
       </PopoverTrigger>
       <PopoverContent side="bottom" className="w-96 space-y-4">

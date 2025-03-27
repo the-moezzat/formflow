@@ -1,7 +1,6 @@
 'use client';
 
 import { useQueryState } from 'nuqs';
-import { useFormData } from '../../_hooks/use-form-data';
 import { Switch } from '@repo/design-system/components/ui/switch';
 import { encodeJsonData } from '@/utils/formEncoder';
 import { cn } from '@repo/design-system/lib/utils';
@@ -17,6 +16,7 @@ import { fieldMetadata } from '../../_utils/field-metadata';
 import React from 'react';
 import type { FormField } from '@repo/schema-types/types';
 import { Input } from '@repo/design-system/components/ui/input';
+import { useFormflow } from '../../_hooks/use-formflow';
 
 const formFields: FormField['type'][] = [
   'text',
@@ -28,11 +28,18 @@ const formFields: FormField['type'][] = [
 ];
 
 function FieldEditor() {
-  const form = useFormData();
+  // const form = useFormData();
+  const { decodedFormData: form, updateForm } = useFormflow();
   const [activeFieldId] = useQueryState('activeField', {
-    defaultValue: form.fields[0]?.id,
+    defaultValue: '',
   });
-  const [_, setForm] = useQueryState('form');
+  // const [_, setForm] = useQueryState('form');
+  // const field = form.fields.find((field) => field.id === activeFieldId);
+
+  if (!form) {
+    return <div>No field selected</div>;
+  }
+
   const field = form.fields.find((field) => field.id === activeFieldId);
 
   return (
@@ -131,6 +138,10 @@ function FieldEditor() {
   );
 
   function handleFieldChange(newField: Partial<FormField>, fieldId: string) {
+    if (!form) {
+      return null;
+    }
+
     const newForm = {
       ...form,
       fields: form.fields.map((field) => {
@@ -142,7 +153,7 @@ function FieldEditor() {
     };
 
     const encodedForm = encodeJsonData(newForm);
-    setForm(encodedForm);
+    updateForm(encodedForm);
 
     return null;
   }

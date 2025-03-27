@@ -1,8 +1,9 @@
 import { chain } from "./utils/chain";
 import { baseMiddleware } from "./middleware/base-middleware";
-import { formMiddleware } from "./middleware/form-redirect-middleware";
+// import { formMiddleware } from "./middleware/form-redirect-middleware";
 
-export default chain([baseMiddleware, formMiddleware]);
+export default chain([baseMiddleware// formMiddleware
+]);
 
 export const config = {
   matcher: [
