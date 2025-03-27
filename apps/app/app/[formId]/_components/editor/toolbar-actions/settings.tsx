@@ -1,6 +1,5 @@
 'use client';
-
-import { useFormData } from '@/app/[formId]/_hooks/use-form-data';
+import { useFormflow } from '@/app/[formId]/_hooks/use-formflow';
 import { encodeJsonData } from '@/utils/formEncoder';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -31,7 +30,6 @@ import { Input } from '@repo/design-system/components/ui/input';
 import { Separator } from '@repo/design-system/components/ui/separator';
 import { Textarea } from '@repo/design-system/components/ui/textarea';
 import { Settings as SettingsIcon } from 'lucide-react';
-import { useQueryState } from 'nuqs';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -42,15 +40,16 @@ const formSchema = z.object({
 });
 
 function Settings() {
-  const formData = useFormData();
-  const [_, setform] = useQueryState('form');
+  // const formData = useFormData();
+  const { decodedFormData: formData, updateForm: setForm } = useFormflow();
+  // const [_, setform] = useQueryState('form');
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     values: {
-      title: formData.title,
-      description: formData.descriptions ?? '',
+      title: formData ? formData.title : '',
+      description: formData ? (formData.descriptions ?? '') : '',
     },
     mode: 'onSubmit',
   });
@@ -64,7 +63,7 @@ function Settings() {
     };
     const decodedForm = encodeJsonData(newForm);
 
-    setform(decodedForm);
+    setForm(decodedForm);
     setDialogOpen(false);
   }
   return (

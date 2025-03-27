@@ -1,5 +1,4 @@
 import Toolbar from './_components/editor/toolbar';
-import { Suspense } from 'react';
 import FormPreviewSection from './_components/editor/form-preview';
 import FieldEditor from './_components/editor/field-editor';
 import { FieldsViewWrapper } from './_components/editor/fields-view-wrapper';
@@ -16,19 +15,14 @@ export type PageProps = {
   }>;
 };
 
-async function Page({ params }: PageProps) {
-  const formId = (await params).formId;
+function Page() {
   return (
     <div className="grid h-[calc(100vh-74px)] grid-cols-[4fr,16fr,4fr] grid-rows-[auto,1fr] gap-4 overflow-y-scroll">
       <div className="col-start-1 row-span-2 rounded-2xl ">
-        <Suspense>
-          <FieldsViewWrapper />
-        </Suspense>
+        <FieldsViewWrapper />
       </div>
-      <Toolbar formId={formId} />
-      <Suspense>
-        <FormPreviewSection />
-      </Suspense>
+      <Toolbar />
+      <FormPreviewSection />
       <div className="row-span-2 rounded-2xl border border-accent bg-accent/60">
         <FieldEditor />
       </div>

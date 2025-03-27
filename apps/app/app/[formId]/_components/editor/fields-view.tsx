@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createSwapy, type SlotItemMapArray, utils, type Swapy } from 'swapy';
-import { useFormData } from '../../_hooks/use-form-data';
 import type { FormField, GeneratedForm } from '@repo/schema-types/types';
 import { useQueryState } from 'nuqs';
 import { encodeJsonData } from '@/utils/formEncoder';
@@ -16,10 +15,14 @@ import {
   PopoverContent,
 } from '@repo/design-system/components/ui/popover';
 import { useFieldAction } from '../../_hooks/use-field-actions';
+import { useFormflow } from '../../_hooks/use-formflow';
 
-function FieldsView() {
-  const form = useFormData();
-  const [encodedForm, setFormState] = useQueryState('form');
+function FieldsView({ form }: { form: GeneratedForm }) {
+  // const form = useFormData();
+
+  const { updateForm } = useFormflow();
+
+  // const [encodedForm, setFormState] = useQueryState('form');
   const swapy = useRef<Swapy | null>(null);
   const container = useRef(null);
 
@@ -34,12 +37,12 @@ function FieldsView() {
   }, [items, slotItemMap]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!container.current) {
-      return;
-    }
-    setItems(form.fields);
-  }, [encodedForm]);
+  // useEffect(() => {
+  //   if (!container.current) {
+  //     return;
+  //   }
+  //   setItems(form.fields);
+  // }, [encodedForm]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(
@@ -71,14 +74,25 @@ function FieldsView() {
 
     swapy.current.onSwap((event) => {
       setSlotItemMap(event.newSlotItemMap.asArray);
-      const fieldsOrder = Object.values(event.newSlotItemMap.asObject);
+      // const fieldsOrder = Object.values(event.newSlotItemMap.asObject);
+      // const newFields = {
+      //   ...form,
+      //   fields: fieldsOrder.map((id) => items.find((field) => field.id === id)),
+      //   metadata: { ...form.metadata },
+      // };
+      // const newEncodedForm = encodeJsonData(newFields);
+      // updateForm(newEncodedForm);
+    });
+
+    swapy.current.onSwapEnd((event) => {
+      const fieldsOrder = Object.values(event.slotItemMap.asObject);
       const newFields = {
         ...form,
         fields: fieldsOrder.map((id) => items.find((field) => field.id === id)),
         metadata: { ...form.metadata },
       };
       const newEncodedForm = encodeJsonData(newFields);
-      setFormState(newEncodedForm);
+      updateForm(newEncodedForm);
     });
 
     return () => {

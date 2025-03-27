@@ -1,24 +1,28 @@
 'use client';
 import generateEdit from '@/app/[formId]/_actions/ai-edit';
-import { useFormData } from '@/app/[formId]/_hooks/use-form-data';
+import { useFormflow } from '@/app/[formId]/_hooks/use-formflow';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { Button } from '@repo/design-system/components/ui/button';
 import { Input } from '@repo/design-system/components/ui/input';
 import { WandSparkles } from 'lucide-react';
-import { useQueryState } from 'nuqs';
 import { useActionState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTrigger } from './ai-editor-dialog';
 
 function EditWithAi() {
-  const [decodedForm, setForm] = useQueryState('form');
+  // const [decodedForm, setForm] = useQueryState('form');
+  const {
+    encodedFormData: decodedForm,
+    decodedFormData: formData,
+    updateForm: setForm,
+  } = useFormflow();
 
   const initialState = {
     prompt: '',
-    result: decodedForm,
+    result: decodedForm ? decodedForm : '',
   };
   const [state, action, isLoading] = useActionState(generateEdit, initialState);
 
-  const formData = useFormData();
+  // const formData = useFormData();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -52,22 +56,23 @@ function EditWithAi() {
             Add more details
           </div>
         </div>
-        <form action={action} className="relative">
+        <form action={action} className="relative mt-2 flex items-center gap-2">
           <Input
             name="prompt"
-            className="mt-4 rounded-full focus-visible:ring-0"
+            disabled={isLoading}
+            className=" focus-visible:ring-0"
             placeholder="Type your changes to Fatten"
           />
           <Input
             name="form"
             type="hidden"
             value={JSON.stringify(formData)}
-            className="mt-4 rounded-full"
+            className="mt-4 hidden rounded-full"
             placeholder="Type your changes to Fatten"
           />
-          {/* <Button type="submit" disabled={isLoading}>
-            Submit
-          </Button> */}
+          <Button type="submit" disabled={isLoading}>
+            Edit
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

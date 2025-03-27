@@ -5,7 +5,6 @@ import { form } from "@repo/database/schema";
 
 export async function GET(request: NextRequest) {
   const formId = request.nextUrl.pathname.split("/").pop();
-  console.log("----Form ID", formId);
   if (!formId) {
     return NextResponse.json({ error: "Missing form ID" }, { status: 400 });
   }
@@ -16,7 +15,7 @@ export async function GET(request: NextRequest) {
       .from(form)
       .where(eq(form.id, formId));
 
-    console.log("----Form response", formData);
+    // console.log("----Form response", formData);
 
     if (!formData) {
       return NextResponse.json({ encodedForm: null }, { status: 404 });

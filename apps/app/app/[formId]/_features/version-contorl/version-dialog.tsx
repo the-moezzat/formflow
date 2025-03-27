@@ -18,12 +18,14 @@ import { revertFormVersion } from '@repo/database/services/form';
 import { toast } from 'sonner';
 import { useQueryState } from 'nuqs';
 import Versions from './versions';
+import { useParams } from 'next/navigation';
 
-function VersionHistory({ formId }: { formId: string }) {
+function VersionHistory() {
   const queryClient = useQueryClient();
   const { selectedVersion, setSelectedVersion } = useVersionHistoryStore();
   const [isOpen, setIsOpen] = useState(false);
   const [_, setFrom] = useQueryState('form');
+  const formId = useParams().formId as string;
   const { mutate, data, isPending } = useMutation({
     mutationFn: async () => {
       if (selectedVersion === null) {
