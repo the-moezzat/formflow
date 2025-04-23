@@ -173,13 +173,13 @@ function FieldsView({ form }: { form: GeneratedForm }) {
               //   </Popover>
               // </div>
 
-              <FieldItem
+              (<FieldItem
                 item={item}
                 itemId={itemId}
                 placeNumber={idx + 1}
                 form={form}
                 key={itemId}
-              />
+              />)
             )}
           </div>
         ))}
@@ -244,7 +244,6 @@ function FieldItem({
       <span className="line-clamp-2 overflow-hidden text-ellipsis">
         {item.name.replaceAll('_', ' ')}
       </span>
-
       <Popover open={isOptionsOpen} onOpenChange={setIsOptionsOpen}>
         <PopoverTrigger asChild>
           <Button
