@@ -20,7 +20,7 @@
     "@chromatic-com/storybook": "^3.2.4",
     "@repo/typescript-config": "workspace:*",
     "@storybook/addon-essentials": "^8.5.0",
-    "@storybook/addon-interactions": "^8.5.0",
+    "@storybook/addon-interactions": "^8.6.12",
     "@storybook/addon-onboarding": "^8.5.0",
     "@storybook/addon-themes": "^8.5.0",
     "@storybook/blocks": "^8.5.0",
