@@ -10,27 +10,11 @@ async function Page({ params }: { params: Promise<{ formId: string }> }) {
   const queryClient = getQueryClient();
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <ResizableLayout>
-        <Suspense
-          fallback={
-            <div className="flex h-full items-center justify-center gap-2">
-              <LoaderCircle className="shrink-0 animate-spin" />
-              {/* <div className="mt-2">Loading...</div> */}
-            </div>
-          }
-        >
-          <ResponseTable formId={formId} />
-        </Suspense>
-      </ResizableLayout>
-    </HydrationBoundary>
-
     // <div className="flex gap-2 ">
     //   <ResizablePanelGroup direction="horizontal" className="gap-2">
     //     <ResizablePanel>
     //       {' '}
     //       <div className="h-full rounded-xl bg-accent p-4 dark:bg-neutral-900 ">
-
     //       </div>
     //     </ResizablePanel>
     //     <ResizableHandle disabled />
@@ -46,7 +30,6 @@ async function Page({ params }: { params: Promise<{ formId: string }> }) {
     //       </div>
     //     </ResizablePanel>
     //   </ResizablePanelGroup>
-
     //   {/* <div className="rounded-xl bg-accent p-4 dark:bg-neutral-900 ">
     //     <DataTable
     //       data={decodeJsonData<GeneratedForm>(form?.encodedForm).fields}
@@ -54,6 +37,20 @@ async function Page({ params }: { params: Promise<{ formId: string }> }) {
     //     />
     //   </div> */}
     // </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ResizableLayout>
+        <Suspense
+          fallback={
+            <div className="flex h-full items-center justify-center gap-2">
+              <LoaderCircle className="shrink-0 animate-spin" />
+              {/* <div className="mt-2">Loading...</div> */}
+            </div>
+          }
+        >
+          <ResponseTable formId={formId} />
+        </Suspense>
+      </ResizableLayout>
+    </HydrationBoundary>
   );
 }
 
