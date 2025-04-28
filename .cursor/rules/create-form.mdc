@@ -1,0 +1,5 @@
+---
+description: create type safe form using shadcn structure form and next safe action actioin server to create type safe and end to end saftey from server and client with validation on both sides
+globs: 
+alwaysApply: false
+---

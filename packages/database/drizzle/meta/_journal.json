@@ -15,6 +15,13 @@
       "when": 1741351664755,
       "tag": "0002_petite_scorpion",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1745475752725,
+      "tag": "0003_damp_archangel",
+      "breakpoints": true
     }
   ]
 }

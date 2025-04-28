@@ -19,7 +19,7 @@ export const DesignSystemProvider = ({
         <AuthProvider>
           <AnalyticsProvider>
             <TooltipProvider>{children}</TooltipProvider>
-            <Toaster />
+            <Toaster richColors />
           </AnalyticsProvider>
         </AuthProvider>
       </ThemeProvider>
