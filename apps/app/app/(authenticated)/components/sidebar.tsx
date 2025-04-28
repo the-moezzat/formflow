@@ -1,6 +1,6 @@
 'use client';
 
-import { OrganizationSwitcher, UserButton } from '@repo/auth/client';
+// import { OrganizationSwitcher, UserButton } from '@repo/auth/client';
 import { ModeToggle } from '@repo/design-system/components/mode-toggle';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
@@ -33,15 +33,17 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from '@repo/design-system/components/ui/sidebar';
-import { cn } from '@repo/design-system/lib/utils';
 import { NotificationsTrigger } from '@repo/notifications/components/trigger';
 import {
   AnchorIcon,
+  AudioWaveform,
   BookOpenIcon,
   BotIcon,
   ChevronRightIcon,
+  Command,
   FolderIcon,
   FrameIcon,
+  GalleryVerticalEnd,
   LifeBuoyIcon,
   MapIcon,
   MoreHorizontalIcon,
@@ -54,6 +56,8 @@ import {
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Search } from './search';
+import { NavUser } from './nav-user';
+import { TeamSwitcher } from './team-switcher';
 
 type GlobalSidebarProperties = {
   readonly children: ReactNode;
@@ -65,6 +69,23 @@ const data = {
     email: 'm@example.com',
     avatar: '/avatars/shadcn.jpg',
   },
+  teams: [
+    {
+      name: 'Acme Inc',
+      logo: GalleryVerticalEnd,
+      plan: 'Enterprise',
+    },
+    {
+      name: 'Acme Corp.',
+      logo: AudioWaveform,
+      plan: 'Startup',
+    },
+    {
+      name: 'Evil Corp.',
+      logo: Command,
+      plan: 'Free',
+    },
+  ],
   navMain: [
     {
       title: 'Playground',
@@ -195,21 +216,7 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
     <>
       <Sidebar variant="inset">
         <SidebarHeader>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <div
-                className={cn(
-                  'h-[36px] overflow-hidden transition-all [&>div]:w-full',
-                  sidebar.open ? '' : '-mx-1'
-                )}
-              >
-                <OrganizationSwitcher
-                  hidePersonal
-                  afterSelectOrganizationUrl="/"
-                />
-              </div>
-            </SidebarMenuItem>
-          </SidebarMenu>
+          <TeamSwitcher teams={data.teams} />
         </SidebarHeader>
         <Search />
         <SidebarContent>
@@ -323,18 +330,10 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
+          <NavUser />
+
           <SidebarMenu>
             <SidebarMenuItem className="flex items-center gap-2">
-              <UserButton
-                showName
-                appearance={{
-                  elements: {
-                    rootBox: 'flex overflow-hidden w-full',
-                    userButtonBox: 'flex-row-reverse',
-                    userButtonOuterIdentifier: 'truncate pl-0',
-                  },
-                }}
-              />
               <div className="flex shrink-0 items-center gap-px">
                 <ModeToggle />
                 <Button

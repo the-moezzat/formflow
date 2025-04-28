@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@better-fetch/fetch':
+        specifier: ^1.1.18
+        version: 1.1.18
       '@clack/prompts':
         specifier: ^0.9.1
         version: 0.9.1
@@ -17,6 +20,9 @@ importers:
       commander:
         specifier: ^13.1.0
         version: 13.1.0
+      framer-motion:
+        specifier: ^12.9.2
+        version: 12.9.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     devDependencies:
       '@auto-it/first-time-contributor':
         specifier: ^11.3.0
@@ -121,6 +127,9 @@ importers:
 
   apps/app:
     dependencies:
+      '@better-fetch/fetch':
+        specifier: ^1.1.18
+        version: 1.1.18
       '@dnd-kit/core':
         specifier: ^6.3.1
         version: 6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -199,6 +208,9 @@ importers:
       '@types/pako':
         specifier: ^2.0.3
         version: 2.0.3
+      better-auth:
+        specifier: ^1.2.7
+        version: 1.2.7
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -247,6 +259,9 @@ importers:
       swapy:
         specifier: ^1.0.5
         version: 1.0.5
+      uuid:
+        specifier: ^11.1.0
+        version: 11.1.0
       zod:
         specifier: ^3.24.1
         version: 3.24.1
@@ -746,12 +761,18 @@ importers:
 
   packages/auth:
     dependencies:
+      '@better-fetch/fetch':
+        specifier: ^1.1.18
+        version: 1.1.18
       '@clerk/nextjs':
         specifier: ^6.9.15
         version: 6.9.15(next@15.3.1(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@clerk/themes':
         specifier: ^2.2.9
         version: 2.2.9
+      '@hookform/resolvers':
+        specifier: ^3.10.0
+        version: 3.10.0(react-hook-form@7.56.1(react@19.0.0))
       '@repo/tailwind-config':
         specifier: workspace:*
         version: link:../tailwind-config
@@ -770,6 +791,9 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.0.0
+      react-hook-form:
+        specifier: ^7.56.1
+        version: 7.56.1(react@19.0.0)
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -866,6 +890,9 @@ importers:
 
   packages/database:
     dependencies:
+      '@better-fetch/fetch':
+        specifier: ^1.1.18
+        version: 1.1.18
       '@t3-oss/env-nextjs':
         specifier: ^0.11.1
         version: 0.11.1(typescript@5.7.3)(zod@3.24.1)
@@ -1455,6 +1482,9 @@ importers:
       '@t3-oss/env-nextjs':
         specifier: ^0.11.1
         version: 0.11.1(typescript@5.7.3)(zod@3.24.1)
+      next:
+        specifier: 15.3.1
+        version: 15.3.1(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       svix:
         specifier: ^1.45.1
         version: 1.45.1
@@ -8661,6 +8691,20 @@ packages:
       react-dom:
         optional: true
 
+  framer-motion@12.9.2:
+    resolution: {integrity: sha512-R0O3Jdqbfwywpm45obP+8sTgafmdEcUoShQTAV+rB5pi+Y1Px/FYL5qLLRe5tPtBdN1J4jos7M+xN2VV2oEAbQ==}
+    peerDependencies:
+      '@emotion/is-prop-valid': '*'
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/is-prop-valid':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
   framework-utils@1.1.0:
     resolution: {integrity: sha512-KAfqli5PwpFJ8o3psRNs8svpMGyCSAe8nmGcjQ0zZBWN2H6dZDnq+ABp3N3hdUmFeMrLtjOCTXD4yplUJIWceg==}
 
@@ -9923,8 +9967,14 @@ packages:
   motion-dom@12.0.0:
     resolution: {integrity: sha512-CvYd15OeIR6kHgMdonCc1ihsaUG4MYh/wrkz8gZ3hBX/uamyZCXN9S9qJoYF03GqfTt7thTV/dxnHYX4+55vDg==}
 
+  motion-dom@12.9.1:
+    resolution: {integrity: sha512-xqXEwRLDYDTzOgXobSoWtytRtGlf7zdkRfFbrrdP7eojaGQZ5Go4OOKtgnx7uF8sAkfr1ZjMvbCJSCIT2h6fkQ==}
+
   motion-utils@12.0.0:
     resolution: {integrity: sha512-MNFiBKbbqnmvOjkPyOKgHUp3Q6oiokLkI1bEwm5QA28cxMZrv0CbbBGDNmhF6DIXsi1pCQBSs0dX8xjeER1tmA==}
+
+  motion-utils@12.8.3:
+    resolution: {integrity: sha512-GYVauZEbca8/zOhEiYOY9/uJeedYQld6co/GJFKOy//0c/4lDqk0zB549sBYqqV2iMuX+uHrY1E5zd8A2L+1Lw==}
 
   motion@12.1.0:
     resolution: {integrity: sha512-X0Pk3mf2j+FCel6ofBbicGvN5ENXyADPymA0/6O/ER2O72wFIjKkAtXVs07eKn/cBsK9C5Dmz3HHAo3QZUvn1A==}
@@ -10821,6 +10871,12 @@ packages:
 
   react-hook-form@7.54.2:
     resolution: {integrity: sha512-eHpAUgUjWbZocoQYUHposymRb4ZP6d0uwUnooL2uOybA9/3tPUvoAKqEWK1WaSiTxxOfTpffNZP7QwlnM3/gEg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
+  react-hook-form@7.56.1:
+    resolution: {integrity: sha512-qWAVokhSpshhcEuQDSANHx3jiAEFzu2HAaaQIzi/r9FNPm1ioAvuJSD4EuZzWd7Al7nTRKcKPnBKO7sRn+zavQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
@@ -14457,6 +14513,10 @@ snapshots:
     dependencies:
       react-hook-form: 7.54.2(react@19.0.0)
 
+  '@hookform/resolvers@3.10.0(react-hook-form@7.56.1(react@19.0.0))':
+    dependencies:
+      react-hook-form: 7.56.1(react@19.0.0)
+
   '@img/sharp-darwin-arm64@0.33.5':
     optionalDependencies:
       '@img/sharp-libvips-darwin-arm64': 1.0.4
@@ -15238,7 +15298,7 @@ snapshots:
       '@types/shimmer': 1.2.0
       import-in-the-middle: 1.12.0
       require-in-the-middle: 7.4.0
-      semver: 7.6.3
+      semver: 7.7.1
       shimmer: 1.2.1
     transitivePeerDependencies:
       - supports-color
@@ -20952,6 +21012,15 @@ snapshots:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 
+  framer-motion@12.9.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      motion-dom: 12.9.1
+      motion-utils: 12.8.3
+      tslib: 2.8.1
+    optionalDependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+
   framework-utils@1.1.0: {}
 
   fromentries@1.3.2: {}
@@ -22550,7 +22619,13 @@ snapshots:
     dependencies:
       motion-utils: 12.0.0
 
+  motion-dom@12.9.1:
+    dependencies:
+      motion-utils: 12.8.3
+
   motion-utils@12.0.0: {}
+
+  motion-utils@12.8.3: {}
 
   motion@12.1.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
@@ -23588,6 +23663,10 @@ snapshots:
     dependencies:
       react: 19.0.0
 
+  react-hook-form@7.56.1(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+
   react-is@16.13.1: {}
 
   react-is@17.0.2: {}
@@ -24259,8 +24338,7 @@ snapshots:
 
   semver@7.6.3: {}
 
-  semver@7.7.1:
-    optional: true
+  semver@7.7.1: {}
 
   sentence-case@2.1.1:
     dependencies:

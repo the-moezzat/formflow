@@ -4,14 +4,15 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "analyze": "drizzle-kit check",
-    "build": "drizzle-kit generate",
+    "analyze": "doppler run -- drizzle-kit check",
+    "build": "doppler run -- drizzle-kit generate",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio",
+    "db:push": "doppler run -- drizzle-kit push",
+    "db:studio": "doppler run -- drizzle-kit studio",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@better-fetch/fetch": "^1.1.18",
     "@t3-oss/env-nextjs": "^0.11.1",
     "@vercel/postgres": "^0.10.0",
     "drizzle-orm": "^0.40.0",
@@ -26,5 +27,6 @@
     "bufferutil": "^4.0.9",
     "drizzle-kit": "^0.30.5",
     "typescript": "^5.7.3"
-  }
+  },
+  "peerDependencies": {}
 }

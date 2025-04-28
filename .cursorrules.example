@@ -1,7 +1,7 @@
-# [PROJECT NAME]
+# [Formflow]
 
 ## PROJECT DESCRIPTION
-- [PROJECT DESCRIPTION - What is the goal of the project? What is the purpose of the project?]
+- Formflow is an AI form builder that use ai in everything in the ai from creating the form and edit the form using the AI(LLM) and then publish the form and use the AI agent that help me analyze the responses i've got from the form and this agent can chat with him about the responses and filter them even this agent can read files the user has been submited to the form like pdf files also can view images and analyze them and watch videos too also the user can create workflow for their form like automation pipelines and other fancy stuff there's no limit of what you can do with workflow for example you can use it to trigger a workflow when the response is submited then create a sales call with this potential client all with ai and no inferent from human or whatever the use case our users want to use the workflows for and at the same time they can connect with 3rd party apps and tools like zapier and crm tools and so on and they can share the form as a standalone webpage or html embed in your website and one of the poweful features is headless forms where you can create the form using ai and have a workflow and connect your form with 3rd party tools and apps and get all the benifits of formflow but you want to use the form healess through an api like you want to create your own form with your branding and style or you want it to use in an embeded device so no need to using the ui and themes that we provide so the headless is the option that you may go with it and at the same time you have saved the time of complexity of forms creation and got all the benifits of formflow like response analysis and workflows automation and so on.  
 
 ## AI AGENT ROLE
 - [AI AGENT ROLE - What is the role of the AI agent? What is the goal of the AI agent? Example ↴]

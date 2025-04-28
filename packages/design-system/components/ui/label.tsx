@@ -21,7 +21,7 @@ const Label = React.forwardRef<
     VariantProps<typeof labelVariants> &
     LabelProps
 >(({ className, required, flags= true, ...props }, ref) => (   
-   <div className="mb-2 flex items-center justify-between gap-1">
+   <div className=" flex items-center justify-between gap-1">
 
   <LabelPrimitive.Root
     ref={ref}

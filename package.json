@@ -4,10 +4,12 @@
   "bin": {
     "next-forge": "dist/index.js"
   },
-  "files": ["dist/index.js"],
+  "files": [
+    "dist/index.js"
+  ],
   "scripts": {
-    "build": "doppler run turbo build",
-    "dev": "doppler run --command=\"turbo dev\"",
+    "build": "doppler run -- turbo build",
+    "dev": "doppler run -- turbo dev ",
     "lint": "ultracite lint",
     "format": "ultracite format",
     "test": "turbo test",
@@ -37,9 +39,11 @@
   },
   "packageManager": "pnpm@9.15.4",
   "dependencies": {
+    "@better-fetch/fetch": "^1.1.18",
     "@clack/prompts": "^0.9.1",
     "@tanstack/react-query": "^5.67.1",
-    "commander": "^13.1.0"
+    "commander": "^13.1.0",
+    "framer-motion": "^12.9.2"
   },
   "type": "module"
 }

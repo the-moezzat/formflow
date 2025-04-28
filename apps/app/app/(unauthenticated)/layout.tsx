@@ -1,40 +1,35 @@
 import { env } from '@/env';
 import { ModeToggle } from '@repo/design-system/components/mode-toggle';
-import { CommandIcon } from 'lucide-react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import Image from 'next/image';
 
 type AuthLayoutProps = {
   readonly children: ReactNode;
 };
 
 const AuthLayout = ({ children }: AuthLayoutProps) => (
-  <div className="container relative grid h-dvh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0">
-    <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
-      <div className="absolute inset-0 bg-zinc-900" />
-      <div className="relative z-20 flex items-center font-medium text-lg">
-        <CommandIcon className="mr-2 h-6 w-6" />
-        Acme Inc
-      </div>
-      <div className="absolute top-4 right-4">
-        <ModeToggle />
-      </div>
-      <div className="relative z-20 mt-auto">
-        <blockquote className="space-y-2">
-          <p className="text-lg">
-            &ldquo;This library has saved me countless hours of work and helped
-            me deliver stunning designs to my clients faster than ever
-            before.&rdquo;
-          </p>
-          <footer className="text-sm">Sofia Davis</footer>
-        </blockquote>
-      </div>
-    </div>
-    <div className="lg:p-8">
-      <div className="mx-auto flex w-full max-w-[400px] flex-col justify-center space-y-6">
-        {children}
+  <div>
+    <div className="grid min-h-svh lg:grid-cols-[2fr,3fr]">
+      <div className="relative flex flex-col justify-between gap-4 p-6 md:p-10">
+        <div className="flex justify-between gap-2 ">
+          <Link href="#" className="flex items-center gap-2 font-medium">
+            <Image src="/logo-full.png" alt="Formflow" width={72} height={48} />
+          </Link>
+
+          <div className=" top-4 right-4">
+            <ModeToggle />
+          </div>
+        </div>
+
+        <div className="flex flex-1 items-center justify-center">
+          <div className="flex w-4/6 flex-col items-center gap-6">
+            {children}
+          </div>
+        </div>
+
         <p className="px-8 text-center text-muted-foreground text-sm">
-          By clicking continue, you agree to our{' '}
+          By continuing, you agree to our{' '}
           <Link
             href={new URL('/legal/terms', env.NEXT_PUBLIC_WEB_URL).toString()}
             className="underline underline-offset-4 hover:text-primary"
@@ -50,6 +45,15 @@ const AuthLayout = ({ children }: AuthLayoutProps) => (
           </Link>
           .
         </p>
+      </div>
+
+      <div className="relative hidden bg-muted lg:block">
+        <Image
+          src="/img.jpg"
+          alt="Image"
+          fill
+          className="absolute inset-0 h-full w-full object-cover"
+        />
       </div>
     </div>
   </div>
