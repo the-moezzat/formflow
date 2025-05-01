@@ -7,7 +7,7 @@ test('Sign In Page', () => {
   expect(
     screen.getByRole('heading', {
       level: 1,
-      name: 'Welcome back',
+      name: 'Login to your account',
     })
   ).toBeDefined();
 });

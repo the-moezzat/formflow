@@ -11,6 +11,7 @@ export const keys = () =>
       GOOGLE_CLIENT_ID: z.string(),
       GOOGLE_CLIENT_SECRET: z.string(),
       BETTER_AUTH_SECRET: z.string(),
+      TURNSTILE_SECRET_KEY: z.string(),
     },
     client: {
       // NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1).startsWith("pk_"),
@@ -35,5 +36,6 @@ export const keys = () =>
       BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
       GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
       GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+      TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     },
   });

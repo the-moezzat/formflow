@@ -76,7 +76,7 @@ export default function Page() {
   );
 }
 
-export const InviteMemberEmailInput = forwardRef(
+const InviteMemberEmailInput = forwardRef(
   function InviteMemberEmailInput(_, ref) {
     const [invitees, setInvitees] = useState([
       { email: '', role: 'member' },
