@@ -1,6 +1,5 @@
-import { auth } from '@repo/auth/server';
 import { database, eq } from '@repo/database';
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { Header } from '../components/header';
 import { form } from '@repo/database/schema';
 
@@ -25,12 +24,6 @@ const SearchPage = async ({ searchParams }: SearchPageProperties) => {
   const { q } = await searchParams;
 
   const forms = await database.select().from(form).where(eq(form.title, q));
-
-  const { orgId } = await auth();
-
-  if (!orgId) {
-    notFound();
-  }
 
   if (!q) {
     redirect('/');

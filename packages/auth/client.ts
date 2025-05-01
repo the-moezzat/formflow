@@ -6,6 +6,7 @@ export const authClient = createAuthClient({
     fetchOptions: {
         onError: (context) => {
             const { response } = context;
+            console.log('response', response);
             if (response.status === 429) {
                 const retryAfter = response.headers.get("X-Retry-After");
                 console.log(
