@@ -10,17 +10,19 @@ import { createForm } from '@repo/database/services/form';
 import { auth } from '@repo/auth/server';
 import { analytics } from '@repo/analytics/posthog/server';
 import { withTracing } from '@repo/analytics/posthog';
+import { headers } from 'next/headers';
 
 type FormState = {
   prompt: string;
 };
 
 export default async function generateForm(_: FormState, data: FormData) {
-  const authData = await auth();
-
-  if (!authData.userId) {
-    throw new Error('You must be signed in to add an item to your cart');
-  }
+  const session = await auth.api.getSession({
+  headers: await headers(), // from next/headers
+});
+if (!session?.user) {
+  throw new Error('You must be signed in to add an item to your cart');
+}
 
   const prompt: string = data.get('prompt') as string;
   log.info(prompt);
@@ -28,11 +30,11 @@ export default async function generateForm(_: FormState, data: FormData) {
   const phClient = analytics;
 
   const google = withTracing(models.google, phClient, {
-    posthogDistinctId: authData.userId, // optional
+    posthogDistinctId: session.user.id, // optional
     // posthogTraceId: 'trace_123', // optional
     posthogProperties: { type: 'generation', paid: true }, // optional
     posthogPrivacyMode: false, // optional
-    posthogGroups: { company: authData.orgId }, // optional
+    posthogGroups: { company: session.session.activeOrganizationId }, // optional
   });
 
   const object = await generateObject({
@@ -86,7 +88,7 @@ export default async function generateForm(_: FormState, data: FormData) {
   log.debug('Token consumed', object.usage);
 
   const databaseForm = await createForm({
-    userId: authData.userId,
+    userId: session.user.id,
     title: form.title,
     encodedForm: encodeJsonData(form),
   });

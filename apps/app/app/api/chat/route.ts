@@ -4,6 +4,7 @@ import { models } from '@repo/ai/lib/models';
 import { analytics } from '@repo/analytics/posthog/server';
 import { withTracing } from '@repo/analytics/posthog';
 import { auth } from '@repo/auth/server';
+import { headers } from 'next/headers';
 
 export const POST = async (req: Request) => {
   const body = await req.json();
@@ -11,9 +12,11 @@ export const POST = async (req: Request) => {
   log.info('🤖 Chat request received.', { body });
   const { messages, formResponse } = body;
 
-  const authData = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(), // from next/headers
+  });
 
-  if (!authData.userId) {
+  if (!session?.user) {
     throw new Error('You must be signed in to add an item to your cart');
   }
 
@@ -23,11 +26,11 @@ export const POST = async (req: Request) => {
 
   // Use type assertion to resolve version mismatch between dependencies
   const openai = withTracing(models.google, phClient, {
-    posthogDistinctId: authData.userId, // optional
+    posthogDistinctId: session.user.id, // optional
     // posthogTraceId: 'trace_123', // optional
     posthogProperties: { type: 'generation', paid: true }, // optional
     posthogPrivacyMode: false, // optional
-    posthogGroups: { company: authData.orgId }, // optional
+    posthogGroups: { company: session.session.activeOrganizationId }, // optional
   });
 
   const result = streamText({
