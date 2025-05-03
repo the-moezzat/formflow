@@ -201,7 +201,7 @@ export function SignupForm({
             )}
           />
 
-          <div className="w-full flex justify-center">
+          <div className="flex w-full justify-center">
             <Turnstile
               siteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
               options={{
@@ -226,7 +226,11 @@ export function SignupForm({
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading || !form.formState.isValid}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading || !form.formState.isValid}
+          >
             {isLoading ? 'Creating account...' : 'Create account'}
           </Button>
         </form>

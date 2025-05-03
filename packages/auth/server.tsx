@@ -16,6 +16,7 @@ import { openAPI } from 'better-auth/plugins';
 import { resend } from '@repo/email';
 import ResetPasswordEmail from '@repo/email/templates/reset-password';
 import VerifyEmail from '@repo/email/templates/verify-email';
+import InviteUserEmail from '@repo/email/templates/invite-user';
 import { keys } from './keys';
 
 export const auth = betterAuth({
@@ -77,7 +78,23 @@ export const auth = betterAuth({
   },
   plugins: [
     nextCookies(),
-    organization(),
+    organization({
+      sendInvitationEmail: async (data) => {
+        await resend.emails.send({
+          from: 'Formflow <support@formflowai.me>',
+          to: data.email,
+          subject: `Join ${data.organization.name} on Formflow`,
+          react: (
+            <InviteUserEmail
+              invitedByUsername={data.inviter.user.name}
+              invitedByEmail={data.inviter.user.email}
+              teamName={data.organization.name}
+              inviteLink={`${process.env.NEXT_PUBLIC_APP_URL}/welcome/invite/${data.id}`}
+            />
+          ),
+        });
+      },
+    }),
     openAPI(),
     captcha({
       provider: 'cloudflare-turnstile', // or google-recaptcha, hcaptcha

@@ -1,4 +1,6 @@
+import { env } from '@/env';
 import Image from 'next/image';
+import Link from 'next/link';
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -94,7 +96,20 @@ function Layout({ children }: { children: React.ReactNode }) {
         {children}
       </div>
       <footer className="text-gray-600 text-sm">
-        Privacy Policy | Terms of Service | © 2025 Formflow
+        © 2025 Formflow |{' '}
+        <Link
+          href={new URL('/legal/terms', env.NEXT_PUBLIC_WEB_URL).toString()}
+          className="underline underline-offset-4 hover:text-primary"
+        >
+          Terms of Service
+        </Link>{' '}
+        |{' '}
+        <Link
+          href={new URL('/legal/privacy', env.NEXT_PUBLIC_WEB_URL).toString()}
+          className="underline underline-offset-4 hover:text-primary"
+        >
+          Privacy Policy
+        </Link>
       </footer>
     </div>
   );

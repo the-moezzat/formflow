@@ -3,9 +3,13 @@ import {
   Button,
   Container,
   Head,
+  Heading,
+  Hr,
   Html,
+  Link,
   Preview,
   Section,
+  Tailwind,
   Text,
 } from '@react-email/components';
 
@@ -14,49 +18,53 @@ interface VerifyEmailProps {
   verificationLink?: string;
 }
 
-// const baseUrl = process.env.VERCEL_URL
-//   ? `https://${process.env.VERCEL_URL}`
-//   : '';
+const baseUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : '';
 
 export const VerifyEmail = ({
   userFirstname,
   verificationLink,
 }: VerifyEmailProps) => {
+  const previewText = `Verify your email address for Formflow`;
+
   return (
     <Html>
       <Head />
-      <Body style={main}>
-        <Preview>Verify your email address for Formflow</Preview>
-        <Container style={container}>
-          {/* <Img
-            src={`${baseUrl}/static/formflow-logo.png`}
-            width="40"
-            height="33"
-            alt="Formflow"
-          /> */}
-          <Section>
-            <Text style={text}>Hi {userFirstname},</Text>
-            <Text style={text}>
-              Thank you for signing up for Formflow! To complete your
-              registration and activate your account, please verify your email
-              address by clicking the button below:
+      <Tailwind>
+        <Body className="mx-auto my-auto bg-white px-2 font-sans">
+          <Preview>{previewText}</Preview>
+          <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-[#eaeaea] border-solid p-[20px]">
+            <Heading className="mx-0 my-[30px] p-0 text-center font-normal text-[24px] text-black">
+              Verify your email address for <strong>Formflow</strong>
+            </Heading>
+            <Text className="text-[14px] text-black leading-[24px]">
+              Hello {userFirstname},
             </Text>
-            <Button style={button} href={verificationLink}>
-              Verify your email address
-            </Button>
-            <Text style={text}>
-              If you did not create a Formflow account, you can safely ignore
-              this email.
+            <Text className="text-[14px] text-black leading-[24px]">
+              Thank you for signing up for <strong>Formflow</strong>! To complete your registration and activate your account, please verify your email address by clicking the button below:
             </Text>
-            <Text style={text}>
-              For your security, please do not share this email or your
-              verification link with anyone. If you have any questions, feel
-              free to contact our support team.
+            <Section className="mt-[32px] mb-[32px] text-center">
+              <Button
+                className="rounded bg-[#EF523E] px-5 py-3 text-center font-semibold text-[12px] text-white no-underline"
+                href={verificationLink}
+              >
+                Verify your email address
+              </Button>
+            </Section>
+            <Text className="text-[14px] text-black leading-[24px]">
+              or copy and paste this URL into your browser:{' '}
+              <Link href={verificationLink} className="text-[#EF523E] no-underline">
+                {verificationLink}
+              </Link>
             </Text>
-            <Text style={text}>Welcome to Formflow!</Text>
-          </Section>
-        </Container>
-      </Body>
+            <Hr className="mx-0 my-[26px] w-full border border-[#eaeaea] border-solid" />
+            <Text className="text-[#666666] text-[12px] leading-[24px]">
+              If you did not create a Formflow account, you can safely ignore this email. For your security, please do not share this email or your verification link with anyone. If you have any questions, feel free to contact our support team.
+            </Text>
+          </Container>
+        </Body>
+      </Tailwind>
     </Html>
   );
 };
@@ -67,40 +75,3 @@ VerifyEmail.PreviewProps = {
 } as VerifyEmailProps;
 
 export default VerifyEmail;
-
-const main = {
-  backgroundColor: '#f6f9fc',
-  padding: '10px 0',
-};
-
-const container = {
-  backgroundColor: '#ffffff',
-  border: '1px solid #f0f0f0',
-  padding: '45px',
-};
-
-const text = {
-  fontSize: '16px',
-  fontFamily:
-    "'Open Sans', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif",
-  fontWeight: '300',
-  color: '#404040',
-  lineHeight: '26px',
-};
-
-const button = {
-  backgroundColor: '#EF523E',
-  borderRadius: '4px',
-  color: '#fff',
-  fontFamily: "'Open Sans', 'Helvetica Neue', Arial",
-  fontSize: '15px',
-  textDecoration: 'none',
-  textAlign: 'center' as const,
-  display: 'block',
-  width: '210px',
-  padding: '14px 7px',
-};
-
-const anchor = {
-  textDecoration: 'underline',
-};

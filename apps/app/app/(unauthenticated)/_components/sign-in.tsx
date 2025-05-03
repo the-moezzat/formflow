@@ -18,8 +18,9 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 import { PasswordInput } from './password-input';
-import { Turnstile } from '@marsidev/react-turnstile'
+import { Turnstile } from '@marsidev/react-turnstile';
 import { env } from '@/env';
+import { useSearchParams } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -33,6 +34,8 @@ export function SignIn({ className, ...props }: React.ComponentProps<'div'>) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+    const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -43,7 +46,7 @@ export function SignIn({ className, ...props }: React.ComponentProps<'div'>) {
     },
   });
 
-  console.log(turnstileToken)
+  console.log(turnstileToken);
 
   async function onSubmit(values: FormValues) {
     if (!turnstileToken) {
@@ -58,9 +61,9 @@ export function SignIn({ className, ...props }: React.ComponentProps<'div'>) {
       const { data, error } = await signIn.email({
         email: values.email,
         password: values.password,
-        callbackURL: '/',
-        fetchOptions: { 
-        headers: { 
+        callbackURL: redirect || '/',
+        fetchOptions: {
+          headers: {
             'x-captcha-response': values.turnstileToken,
           },
         },
@@ -143,7 +146,7 @@ export function SignIn({ className, ...props }: React.ComponentProps<'div'>) {
           )}
         />
 
-        <div className="w-full flex justify-center">
+        <div className="flex w-full justify-center">
           <Turnstile
             siteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
             options={{
@@ -168,7 +171,11 @@ export function SignIn({ className, ...props }: React.ComponentProps<'div'>) {
           />
         </div>
 
-        <Button type="submit" className="mt-4 w-full" disabled={isLoading  || !form.formState.isValid}>
+        <Button
+          type="submit"
+          className="mt-4 w-full"
+          disabled={isLoading || !form.formState.isValid}
+        >
           {isLoading ? 'Logging in...' : 'Login'}
         </Button>
       </form>
