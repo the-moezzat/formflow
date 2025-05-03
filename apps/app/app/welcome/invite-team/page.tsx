@@ -18,14 +18,19 @@ import {
   SelectValue,
 } from '@repo/design-system/components/ui/select';
 import Link from 'next/link';
+import { authClient } from '@repo/auth/client';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { z } from 'zod';
 
 export default function Page() {
+  const router = useRouter();
   const inviteInputRef = useRef<{
     getInvitees: () => { email: string; role: string }[];
     validate: () => boolean;
   }>(null);
   const [hasEmail, setHasEmail] = useState(false);
-
+  const [isInviting, setIsInviting] = useState(false);
   useEffect(() => {
     const checkEmails = () => {
       if (inviteInputRef.current) {
@@ -38,15 +43,39 @@ export default function Page() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleInvite = () => {
-    if (inviteInputRef.current) {
-      const isValid = inviteInputRef.current.validate();
-      if (!isValid) return;
-      const invitees = inviteInputRef.current
-        .getInvitees()
-        .filter((i) => i.email.trim() !== '');
-      console.log('Invited invitees:', invitees);
+  const handleInvite = async () => {
+    if (!inviteInputRef.current) {
+      return;
     }
+
+    const isValid = inviteInputRef.current.validate();
+    if (!isValid) {
+      return;
+    }
+
+    const invitees = inviteInputRef.current
+      .getInvitees()
+      .filter((i) => i.email.trim() !== '');
+
+    for (const member of invitees) {
+      const { error } = await authClient.organization.inviteMember({
+        email: member.email,
+        role: member.role as 'member' | 'admin' | 'owner',
+      });
+
+      if (error) {
+        console.error(error);
+        toast.error(`Failed to invite ${member.email}`, {
+          description: error.message,
+        });
+        return;
+      }
+    }
+
+    toast.success('Invitations sent successfully');
+
+    setIsInviting(false);
+    router.push('/');
   };
 
   return (
@@ -65,8 +94,12 @@ export default function Page() {
         <div className="max-h-[250px] overflow-y-auto overflow-x-visible p-0.5 pr-4">
           <InviteMemberEmailInput ref={inviteInputRef} />
         </div>
-        <Button className="mt-4" onClick={handleInvite} disabled={!hasEmail}>
-          Invite
+        <Button
+          className="mt-4"
+          onClick={handleInvite}
+          disabled={!hasEmail || isInviting}
+        >
+          {isInviting ? 'Inviting...' : 'Invite'}
         </Button>
         <Button variant="ghost" asChild>
           <Link href="/">Skip for now</Link>
@@ -75,6 +108,13 @@ export default function Page() {
     </div>
   );
 }
+
+const inviteeSchema = z.object({
+  email: z.string().email('Invalid email'),
+  role: z.enum(['member', 'admin'], {
+    invalid_type_error: 'Invalid role',
+  }),
+});
 
 const InviteMemberEmailInput = forwardRef(
   function InviteMemberEmailInput(_, ref) {
@@ -90,12 +130,13 @@ const InviteMemberEmailInput = forwardRef(
       () => ({
         getInvitees: () => invitees,
         validate: () => {
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          const errs = invitees.map((i) =>
-            i.email && !emailRegex.test(i.email) ? 'Invalid email' : ''
-          );
-          setErrors(errs);
-          return errs.every((e) => !e);
+          const validationResults = invitees.map((invitee) => {
+            if (!invitee.email) return '';
+            const result = inviteeSchema.safeParse(invitee);
+            return result.success ? '' : result.error.errors[0].message;
+          });
+          setErrors(validationResults);
+          return validationResults.every((e) => !e);
         },
       }),
       [invitees]

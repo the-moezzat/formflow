@@ -1,8 +1,8 @@
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import SocialLogin from '../../_components/social-login';
 import Link from 'next/link';
+import SocialLogin from '../../_components/social-login';
 
 const title = 'Login to your account';
 const description = 'Enter your email below to login to your account.';
