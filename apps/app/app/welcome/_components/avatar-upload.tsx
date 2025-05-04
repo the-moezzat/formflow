@@ -2,7 +2,7 @@
 
 import { CircleUserRoundIcon, XIcon } from 'lucide-react';
 
-import { useUploadThing } from '@repo/design-system/hooks/use-uploadthing';
+import { useUploadThing } from '@/utils/uploadthing-helper';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
   type FileWithPreview,

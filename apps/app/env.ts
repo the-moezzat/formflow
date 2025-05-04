@@ -31,11 +31,9 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_PREVIEW_URL: z.string(),
-    NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string(),
   },
   runtimeEnv: {
     ENV: process.env.ENV,
     NEXT_PUBLIC_PREVIEW_URL: process.env.NEXT_PUBLIC_PREVIEW_URL,
-    NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   },
 });

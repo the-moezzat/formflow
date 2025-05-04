@@ -1,6 +1,7 @@
 'use client';
 import { authClient } from '@repo/auth/client';
 import { Button } from '@repo/design-system/components/ui/button';
+import { log } from '@repo/observability/log';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -9,7 +10,6 @@ export default function AcceptInvitationButton({
 }: {
   invitationId: string;
 }) {
-  console.log(invitationId);
   const router = useRouter();
   const handleAccept = async () => {
     toast.loading('Accepting invitation...', {
@@ -30,7 +30,7 @@ export default function AcceptInvitationButton({
     );
 
     if (error) {
-      console.error(error);
+      log.error(error?.message ?? 'Unknown error');
       toast.error('Failed to accept invitation', {
         id: 'accept-invitation',
         description: error.message,

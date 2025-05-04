@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
+
 const formSchema = z.object({
   name: z.string().min(2, {
     message: 'Workspace name must be at least 2 characters.',
@@ -31,6 +32,7 @@ const formSchema = z.object({
       message:
         'Handle can only contain lowercase letters, numbers, and hyphens.',
     }),
+  logo: z.string().url().optional(),
 });
 
 function CreateWorkspaceForm() {
@@ -66,6 +68,7 @@ function CreateWorkspaceForm() {
       const { data, error } = await authClient.organization.create({
         name: values.name,
         slug: values.slug,
+        logo: values.logo, // Use the avatar URL as the logo
       });
 
       if (error) {
@@ -117,7 +120,29 @@ function CreateWorkspaceForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex w-full flex-col gap-4"
       >
-        <AvatarUpload />
+        <FormField
+          control={form.control}
+          name="logo"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <AvatarUpload
+                  label="Workspace Logo"
+                  onFileUploaded={(fileUrl) => {
+                    console.log('File URL:', fileUrl);
+                    field.onChange(fileUrl);
+                    form.setValue('logo', fileUrl);
+                  }}
+                  onFilesRemove={(files) => {
+                    field.onChange(undefined);
+                    form.setValue('logo', '');
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="name"

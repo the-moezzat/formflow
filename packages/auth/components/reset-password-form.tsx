@@ -1,6 +1,5 @@
 'use client';
 
-import { PasswordInput } from '@/app/(unauthenticated)/_components/password-input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { authClient } from '@repo/auth/client';
 import { Button } from '@repo/design-system/components/ui/button';
@@ -12,7 +11,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@repo/design-system/components/ui/form';
+import { PasswordInput } from '@repo/design-system/components/ui/password-input';
 import { cn } from '@repo/design-system/lib/utils';
+import { log } from '@repo/observability/log';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -44,8 +45,6 @@ export function ResetPasswordForm({
 
   const token = useSearchParams().get('token') as string;
 
-  console.log('token', token);
-
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
@@ -55,13 +54,13 @@ export function ResetPasswordForm({
     setError(null);
 
     try {
-      const { data, error } = await authClient.resetPassword({
+      const { error } = await authClient.resetPassword({
         newPassword: values.password,
         token: token,
       });
 
       if (error) {
-        console.error('Reset password error:', error);
+        log.error('Reset password error:', error);
         toast.error(
           'An error occurred while resetting your password. Please try again.',
           {
@@ -79,8 +78,10 @@ export function ResetPasswordForm({
         'Password reset successfully! Please sign in with your new password.'
       );
       router.push('/sign-in');
-    } catch (err) {
-      console.error('Reset password exception:', err);
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Unknown error occurred';
+      log.error('Reset password exception:', { message: errorMessage });
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);

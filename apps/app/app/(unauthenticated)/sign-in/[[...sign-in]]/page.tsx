@@ -2,12 +2,12 @@ import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import SocialLogin from '../../_components/social-login';
-
+import SocialLogin from '@repo/auth/components/social-login';
+  
 const title = 'Login to your account';
 const description = 'Enter your email below to login to your account.';
 const SignIn = dynamic(() =>
-  import('../../_components/sign-in').then((mod) => mod.SignIn)
+  import('@repo/auth/components/sign-in-form').then((mod) => mod.SignIn)
 );
 
 export const metadata: Metadata = createMetadata({ title, description });

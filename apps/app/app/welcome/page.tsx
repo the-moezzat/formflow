@@ -1,4 +1,4 @@
-import CreateWorkspaceForm from './_components/create-workspace-form';
+import CreateWorkspaceForm from '@repo/auth/components/create-workspace-form';
 
 function Page() {
   return (

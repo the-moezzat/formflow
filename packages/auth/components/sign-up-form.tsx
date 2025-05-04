@@ -1,7 +1,7 @@
 'use client';
 
-import CheckEmail from '@/app/(unauthenticated)/_components/check-email';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { authClient } from '@repo/auth/client';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
@@ -14,26 +14,38 @@ import {
 } from '@repo/design-system/components/ui/form';
 import { Input } from '@repo/design-system/components/ui/input';
 import { cn } from '@repo/design-system/lib/utils';
-import { useState } from 'react';
+import { type ComponentProps, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
-import { Turnstile } from '@marsidev/react-turnstile';
-import { env } from '@/env';
+import { CheckEmail } from '@repo/design-system/components/check-email';
+import { PasswordInput } from '@repo/design-system/components/ui/password-input';
+import { keys } from '@repo/auth/keys';
 
 const formSchema = z.object({
+  firstName: z
+    .string({ message: 'First name is required' })
+    .min(2, { message: 'First name must be at least 2 characters' }),
+  lastName: z
+    .string({ message: 'Last name is required' })
+    .min(2, { message: 'Last name must be at least 2 characters' }),
   email: z
     .string({ message: 'Email is required' })
     .email({ message: 'Please enter a valid email address' }),
+  password: z
+    .string({ message: 'Password is required' })
+    .min(8, { message: 'Password must be at least 8 characters' })
+    .max(32, { message: 'Password must not exceed 32 characters' }),
   turnstileToken: z.string(),
 });
+//   .refine((data) => data.password === data.confirmPassword, {
+//     message: 'Passwords do not match',
+//     path: ['confirmPassword'],
+//   });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function SendResetEmail({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) {
+export function SignupForm({ className, ...props }: ComponentProps<'div'>) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -43,7 +55,10 @@ export function SendResetEmail({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      firstName: '',
+      lastName: '',
       email: '',
+      password: '',
       turnstileToken: '',
     },
   });
@@ -58,9 +73,10 @@ export function SendResetEmail({
     setError(null);
 
     try {
-      const { data, error } = await authClient.forgetPassword({
+      const { error } = await authClient.signUp.email({
+        name: `${values.firstName} ${values.lastName}`,
         email: values.email,
-        redirectTo: '/forgot-password',
+        password: values.password,
         fetchOptions: {
           headers: {
             'x-captcha-response': values.turnstileToken,
@@ -68,18 +84,19 @@ export function SendResetEmail({
         },
       });
 
-      console.log('data', data, error);
-
       if (error) {
-        console.error('Reset password error:', error);
-        toast.error('An error occurred while requesting password reset. Please try again.');
-        setError(error.message || 'Failed to request password reset. Please try again.');
+        toast.error('An error occurred while signing up. Please try again.');
+        setError(error.message || 'Failed to sign up. Please try again.');
         return;
       }
+
+      toast.success(
+        'Signup successful! Please check your email to verify your account.'
+      );
       setSuccess(true);
       setSentEmail(values.email);
     } catch (err) {
-      console.error('Reset password exception:', err);
+      console.error('Signup error:', err);
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
@@ -89,8 +106,8 @@ export function SendResetEmail({
   if (success && sentEmail) {
     return (
       <CheckEmail
-        headline="Check your email for a reset link"
-        description={` We've sent a password reset link to your email ${sentEmail}. Please check your inbox.`}
+        headline="Check your email to verify your account"
+        description={`We've sent a verification link to your email ${sentEmail}. Please check your inbox to complete your registration.`}
         actions={
           <Button
             variant={'outline'}
@@ -109,7 +126,7 @@ export function SendResetEmail({
   }
 
   return (
-    <div className={cn('flex w-full flex-col gap-6', className)} {...props}>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
       {error && (
         <div className="rounded border border-red-200 bg-red-50 px-4 py-3 text-red-700">
           {error}
@@ -118,12 +135,41 @@ export function SendResetEmail({
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>FirstName</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Email address</FormLabel>
+                <FormLabel required>Email</FormLabel>
                 <FormControl>
                   <Input placeholder="m@example.com" type="email" {...field} />
                 </FormControl>
@@ -132,9 +178,23 @@ export function SendResetEmail({
             )}
           />
 
-          <div className="w-full flex justify-center">
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel required>Password</FormLabel>
+                <FormControl>
+                  <PasswordInput showStrengthChecker {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex w-full justify-center">
             <Turnstile
-              siteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              siteKey={keys().NEXT_PUBLIC_TURNSTILE_SITE_KEY}
               options={{
                 size: 'flexible',
                 theme: 'auto',
@@ -157,8 +217,12 @@ export function SendResetEmail({
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading || !form.formState.isValid}>
-            {isLoading ? 'Resetting password...' : 'Reset password'}
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading || !form.formState.isValid}
+          >
+            {isLoading ? 'Creating account...' : 'Create account'}
           </Button>
         </form>
       </Form>
