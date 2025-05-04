@@ -10,14 +10,16 @@
     "@clerk/nextjs": "^6.9.15",
     "@clerk/themes": "^2.2.9",
     "@hookform/resolvers": "^3.10.0",
-    "@repo/tailwind-config": "workspace:*",
+    "@marsidev/react-turnstile": "^1.1.0",
+    "@repo/design-system": "workspace:*",
     "@repo/email": "workspace:*",
+    "@repo/tailwind-config": "workspace:*",
     "@t3-oss/env-nextjs": "^0.11.1",
     "better-auth": "^1.2.7",
     "next": "15.3.1",
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
-    "react-hook-form": "^7.56.1",
+    "react-hook-form": "^7.56.2",
     "server-only": "^0.0.1",
     "zod": "^3.24.1"
   },
@@ -30,6 +32,7 @@
     "typescript": "^5.7.3"
   },
   "peerDependencies": {
-    "@better-fetch/fetch": "^1.1.18"
+    "@better-fetch/fetch": "^1.1.18",
+    "sonner": "^1.7.2"
   }
 }

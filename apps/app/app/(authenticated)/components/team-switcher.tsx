@@ -1,6 +1,4 @@
 'use client';
-
-import * as React from 'react';
 import { ChevronsUpDown, Plus } from 'lucide-react';
 
 import {
@@ -34,23 +32,10 @@ import {
 } from '@repo/design-system/components/ui/avatar';
 import CreateOrgForm from './create-org-form';
 
-export function TeamSwitcher({
-  teams,
-}: {
-  teams: {
-    name: string;
-    logo: React.ElementType;
-    plan: string;
-  }[];
-}) {
+export function TeamSwitcher() {
   const { isMobile } = useSidebar();
   const { data: organizations } = authClient.useListOrganizations();
   const { data: activeOrganization } = authClient.useActiveOrganization();
-  const [activeTeam] = React.useState(teams[1]);
-
-  if (!activeTeam) {
-    return null;
-  }
 
   return (
     <SidebarMenu>
@@ -62,14 +47,22 @@ export function TeamSwitcher({
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <activeTeam.logo className="size-4" />
-                </div>
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage
+                    src={activeOrganization?.logo || ''}
+                    alt={activeOrganization?.name}
+                  />
+                  <AvatarFallback className="rounded-lg">
+                    {activeOrganization?.name
+                      .split(' ')
+                      .reduce((prev, curr) => prev + curr[0], '')}
+                  </AvatarFallback>
+                </Avatar>{' '}
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
                     {activeOrganization?.name}
                   </span>
-                  <span className="truncate text-xs">{activeTeam.plan}</span>
+                  <span className="truncate text-xs">free plan</span>
                 </div>
                 <ChevronsUpDown className="ml-auto" />
               </SidebarMenuButton>

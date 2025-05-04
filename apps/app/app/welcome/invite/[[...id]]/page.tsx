@@ -13,10 +13,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import Balancer from 'react-wrap-balancer';
-import AcceptInvitationButton from './_components/accept-invitation-button';
-import RejectInvitationButton from './_components/reject-invitaiton-button';
+import RejectInvitationButton from '@repo/auth/components/reject-invitaiton-button';
+import AcceptInvitationButton from '@repo/auth/components/accept-invitation-button';
 
-// Type for API errors
 interface ApiError {
   statusCode: number;
   message?: string;

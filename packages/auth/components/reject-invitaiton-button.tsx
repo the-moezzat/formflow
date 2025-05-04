@@ -1,6 +1,7 @@
 'use client';
 import { authClient } from '@repo/auth/client';
 import { Button } from '@repo/design-system/components/ui/button';
+import { log } from '@repo/observability/log';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -11,7 +12,7 @@ export default function RejectInvitationButton({
 }) {
   const router = useRouter();
   const handleReject = async () => {
-    const { data, error } = await authClient.organization.rejectInvitation(
+    const { error } = await authClient.organization.rejectInvitation(
       {
         invitationId,
       },
@@ -37,7 +38,7 @@ export default function RejectInvitationButton({
     );
 
     if (error) {
-      console.error(error);
+      log.error(error?.message ?? 'Unknown error');
     }
   };
 

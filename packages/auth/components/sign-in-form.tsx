@@ -1,7 +1,9 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { signIn } from '@repo/auth/client';
+import { keys } from '@repo/auth/keys';
 import { Button } from '@repo/design-system/components/ui/button';
 import {
   Form,
@@ -12,15 +14,14 @@ import {
   FormMessage,
 } from '@repo/design-system/components/ui/form';
 import { Input } from '@repo/design-system/components/ui/input';
+import { PasswordInput } from '@repo/design-system/components/ui/password-input';
+import { log } from '@repo/observability/log';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
-import { PasswordInput } from './password-input';
-import { Turnstile } from '@marsidev/react-turnstile';
-import { env } from '@/env';
-import { useSearchParams } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -34,7 +35,7 @@ export function SignIn({ className, ...props }: React.ComponentProps<'div'>) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-    const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect');
 
   const form = useForm<FormValues>({
@@ -46,7 +47,40 @@ export function SignIn({ className, ...props }: React.ComponentProps<'div'>) {
     },
   });
 
-  console.log(turnstileToken);
+  const handleAuthError = (error: { code?: string; message?: string }) => {
+    const errorMessage =
+      error.code === 'EMAIL_NOT_VERIFIED'
+        ? 'Email not verified. A new verification link has been sent to your inbox.'
+        : error.message || 'Failed to login. Please try again.';
+
+    setError(errorMessage);
+    toast.error('Login failed', {
+      description:
+        error.code === 'EMAIL_NOT_VERIFIED'
+          ? 'Please verify your email address before signing in.'
+          : error.message || 'Failed to login. Please try again.',
+    });
+    log.error('Login error:', error);
+  };
+
+  const performSignIn = async (values: FormValues) => {
+    const { error } = await signIn.email({
+      email: values.email,
+      password: values.password,
+      callbackURL: redirect || '/',
+      fetchOptions: {
+        headers: {
+          'x-captcha-response': values.turnstileToken,
+        },
+      },
+    });
+
+    if (error) {
+      handleAuthError(error);
+      return false;
+    }
+    return true;
+  };
 
   async function onSubmit(values: FormValues) {
     if (!turnstileToken) {
@@ -58,38 +92,11 @@ export function SignIn({ className, ...props }: React.ComponentProps<'div'>) {
     setError(null);
 
     try {
-      const { data, error } = await signIn.email({
-        email: values.email,
-        password: values.password,
-        callbackURL: redirect || '/',
-        fetchOptions: {
-          headers: {
-            'x-captcha-response': values.turnstileToken,
-          },
-        },
-      });
-
-      console.log('Login result:', data);
-      if (error) {
-        // Check for email verification error
-        if (error.code === 'EMAIL_NOT_VERIFIED') {
-          setError(
-            'Email not verified. A new verification link has been sent to your inbox.'
-          );
-        } else {
-          setError(error.message || 'Failed to login. Please try again.');
-        }
-        toast.error('Login failed', {
-          description:
-            error.code === 'EMAIL_NOT_VERIFIED'
-              ? 'Please verify your email address before signing in.'
-              : error.message || 'Failed to login. Please try again.',
-        });
-        console.log('Login error:', error);
-        return;
-      }
-    } catch (error) {
-      console.error(error);
+      await performSignIn(values);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error occurred';
+      log.error(errorMessage);
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
@@ -148,13 +155,12 @@ export function SignIn({ className, ...props }: React.ComponentProps<'div'>) {
 
         <div className="flex w-full justify-center">
           <Turnstile
-            siteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+            siteKey={keys().NEXT_PUBLIC_TURNSTILE_SITE_KEY}
             options={{
               size: 'flexible',
               theme: 'auto',
             }}
             onSuccess={(token) => {
-              console.log('Token:', token);
               setTurnstileToken(token);
               form.setValue('turnstileToken', token);
             }}

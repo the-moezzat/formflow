@@ -3,8 +3,9 @@ import type { Config } from 'tailwindcss';
 import animate from 'tailwindcss-animate';
 import defaultTheme from 'tailwindcss/defaultTheme';
 import typographyConfig from './typography.config';
+import { withUt } from "uploadthing/tw";
 
-export const config: Config = {
+export const config: Config = withUt( {
   darkMode: ['class'],
   content: [
     './node_modules/@repo/design-system/components/**/*.{ts,tsx}',
@@ -115,4 +116,4 @@ export const config: Config = {
     },
   },
   plugins: [animate, typography],
-};
+});

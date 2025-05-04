@@ -1,13 +1,13 @@
 import { createMetadata } from '@repo/seo/metadata';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import SocialLogin from '../../_components/social-login';
 import Link from 'next/link';
+import SocialLogin from '@repo/auth/components/social-login';
 
 const title = 'Create an account';
 const description = 'Enter your details to get started.';
 const SignUp = dynamic(() =>
-  import('../../_components/sign-up-form').then((mod) => mod.SignupForm)
+  import('@repo/auth/components/sign-up-form').then((mod) => mod.SignupForm)
 );
 
 export const metadata: Metadata = createMetadata({ title, description });

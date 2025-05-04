@@ -6,22 +6,14 @@ import Link from 'next/link';
 const title = 'Forgot your password?';
 const description = "Don't worry, just enter your email and we'll assist you.";
 const SendResetEmail = dynamic(() =>
-  import('./_components/send-reset-email').then((mod) => mod.SendResetEmail)
-);
-
-const ResetPasswordForm = dynamic(() =>
-  import('./_components/reset-form').then((mod) => mod.ResetPasswordForm)
+  import('@repo/auth/components/send-reset-email').then(
+    (mod) => mod.SendResetEmail
+  )
 );
 
 export const metadata: Metadata = createMetadata({ title, description });
 
-export default async function ForgotPasswordPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ token: string }>;
-}) {
-  const { token } = await searchParams;
-
+export default function ForgotPasswordPage() {
   return (
     <>
       <div className="flex flex-col items-center gap-2 text-center">
@@ -30,7 +22,7 @@ export default async function ForgotPasswordPage({
         <p className="max-w-md text-muted-foreground text-sm">{description} </p>
       </div>
 
-      {token ? <ResetPasswordForm /> : <SendResetEmail />}
+      {<SendResetEmail />}
 
       <p className="text-muted-foreground text-sm">
         Already part of the family?{' '}
