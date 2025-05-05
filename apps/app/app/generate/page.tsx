@@ -1,66 +1,29 @@
-'use client';
-import { Button } from '@repo/design-system/components/ui/button';
-import { Mail, MessageSquare, RefreshCcw, Settings2, User } from 'lucide-react';
-import type { ReactElement } from 'react';
+import { auth } from '@repo/auth/server';
 import PromptArea from './_components/prompt-area';
+import { PromptExamples } from './_components/prompt-examples';
+import { headers } from 'next/headers';
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   return (
     <div className="grid h-dvh w-full content-center justify-items-center">
       <div className=" w-7/12 space-y-8">
         <header className=" flex flex-col gap-4">
           <h1 className="w-fit bg-gradient-to-r from-yellow-600 to-blue-500 bg-clip-text font-bold text-4xl text-transparent">
-            Hi there, <br /> What would you like to build?
+            Hi {session ? session.user.name.split(' ')[0] : 'there'}, <br />{' '}
+            What would you like to build?
           </h1>
           <p className="text-gray-600 text-lg dark:text-gray-400">
             Use one of most common prompts below or use your own to begin
           </p>
-          <div className="space-y-2">
-            <div className="mt-4 grid grid-cols-4 gap-2">
-              <PromptExample
-                content="Customer Satisfaction Survey for Product Feedback"
-                Icon={<User size={18} />}
-              />
-              <PromptExample
-                content="Monthly Employee Feedback and Performance Review"
-                Icon={<Mail size={18} />}
-              />
-              <PromptExample
-                content="Join Our Team: Job Application Form"
-                Icon={<MessageSquare size={18} />}
-              />
-              <PromptExample
-                content="Startup Incubator Funding Application Form"
-                Icon={<Settings2 size={18} />}
-              />
-            </div>
-            <Button variant={'ghost'}>
-              {' '}
-              <RefreshCcw
-                className="-ms-1 me-2 opacity-60"
-                size={16}
-                strokeWidth={2}
-                aria-hidden="true"
-              />{' '}
-              Refresh prompts
-            </Button>
-          </div>
+          <PromptExamples />
         </header>
 
         <PromptArea />
       </div>
-    </div>
-  );
-}
-
-function PromptExample({
-  content,
-  Icon,
-}: { content: string; Icon: ReactElement }) {
-  return (
-    <div className="flex cursor-pointer flex-col justify-between gap-6 rounded-lg border p-4 text-gray-700 text-sm transition-colors hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-neutral-900">
-      <p className="text-sm">{content}</p>
-      {Icon}
     </div>
   );
 }

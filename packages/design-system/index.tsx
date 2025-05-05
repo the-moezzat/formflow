@@ -15,7 +15,7 @@ export const DesignSystemProvider = ({
 }: DesignSystemProviderProperties) => (
   <ReactQueryProvider>
     <NuqsAdapter>
-      <ThemeProvider {...properties}>
+      <ThemeProvider {...properties} defaultTheme="light">
         <AuthProvider>
           <AnalyticsProvider>
             <TooltipProvider>{children}</TooltipProvider>

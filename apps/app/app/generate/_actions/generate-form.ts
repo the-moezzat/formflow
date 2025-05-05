@@ -17,12 +17,20 @@ type FormState = {
 };
 
 export default async function generateForm(_: FormState, data: FormData) {
-  const session = await auth.api.getSession({
+  
+  let session = await auth.api.getSession({
   headers: await headers(), // from next/headers
-});
-if (!session?.user) {
-  throw new Error('You must be signed in to add an item to your cart');
-}
+  });
+
+  if (!session) {
+    await auth.api.signInAnonymous({
+      headers: await headers(),
+    });
+
+    session = await auth.api.getSession({
+      headers: await headers(),
+    });
+  }
 
   const prompt: string = data.get('prompt') as string;
   log.info(prompt);
@@ -30,11 +38,11 @@ if (!session?.user) {
   const phClient = analytics;
 
   const google = withTracing(models.google, phClient, {
-    posthogDistinctId: session.user.id, // optional
+    posthogDistinctId: session?.user.id, // optional
     // posthogTraceId: 'trace_123', // optional
     posthogProperties: { type: 'generation', paid: true }, // optional
     posthogPrivacyMode: false, // optional
-    posthogGroups: { company: session.session.activeOrganizationId }, // optional
+    posthogGroups: { company: session?.session.activeOrganizationId }, // optional
   });
 
   const object = await generateObject({
@@ -88,7 +96,7 @@ if (!session?.user) {
   log.debug('Token consumed', object.usage);
 
   const databaseForm = await createForm({
-    userId: session.user.id,
+    userId: session?.user.id,
     title: form.title,
     encodedForm: encodeJsonData(form),
   });

@@ -12,7 +12,7 @@ function FormPreviewSection() {
       {decodedFormData ? (
         <>
           {' '}
-          <header className="flex flex-col items-start justify-between gap-2 rounded-xl bg-secondary/100 p-4 text-white">
+          <header className="flex flex-col items-start justify-between gap-2 rounded-xl bg-sky-950 p-4 text-white">
             <h1 className="font-bold text-2xl">{decodedFormData.title}</h1>
             <p className="text-sm">{decodedFormData.descriptions}</p>
           </header>
