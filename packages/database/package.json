@@ -5,9 +5,9 @@
   "types": "./index.ts",
   "scripts": {
     "analyze": "doppler run -- drizzle-kit check",
-    "build": "doppler run -- drizzle-kit generate",
+    "build": "drizzle-kit generate",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "db:push": "doppler run -- drizzle-kit push",
+    "db:push": "drizzle-kit push",
     "db:studio": "doppler run -- drizzle-kit studio",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
