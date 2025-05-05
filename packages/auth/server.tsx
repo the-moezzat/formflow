@@ -4,13 +4,14 @@ import {
   member,
   organization as organizationSchema,
   session,
+  team,
   user,
   verification,
 } from '@repo/database/schema';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { nextCookies } from 'better-auth/next-js';
-import { captcha, organization } from 'better-auth/plugins';
+import { anonymous, captcha, organization } from 'better-auth/plugins';
 import { database, eq } from '../database';
 import { openAPI } from 'better-auth/plugins';
 import { resend } from '@repo/email';
@@ -30,6 +31,7 @@ export const auth = betterAuth({
       organization: organizationSchema,
       member: member,
       invitation: invitation,
+      team: team,
     },
   }),
 
@@ -94,7 +96,12 @@ export const auth = betterAuth({
           ),
         });
       },
+      teams: {
+        enabled: true,
+        allowRemovingAllTeams: false, // Optional: prevent removing the last team
+      },
     }),
+    anonymous(),
     openAPI(),
     captcha({
       provider: 'cloudflare-turnstile', // or google-recaptcha, hcaptcha

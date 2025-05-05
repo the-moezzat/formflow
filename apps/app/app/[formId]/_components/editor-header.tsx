@@ -28,7 +28,7 @@ function EditorHeader() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink>My workspace</BreadcrumbLink>
+              <BreadcrumbLink href="/">My workspace</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

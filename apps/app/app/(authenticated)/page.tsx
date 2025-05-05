@@ -1,7 +1,14 @@
+import { auth } from '@repo/auth/server';
 import { database } from '@repo/database';
+import { eq } from '@repo/database';
 import { form } from '@repo/database/schema';
+import { Button } from '@repo/design-system/components/ui/button';
+import { Plus } from 'lucide-react';
 import type { Metadata } from 'next';
-import { Header } from './components/header';
+import { headers } from 'next/headers';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { FormCard } from './components/form-card';
 
 const title = 'Acme Inc';
 const description = 'My application.';
@@ -18,33 +25,50 @@ export const metadata: Metadata = {
 };
 
 const App = async () => {
-  const forms = await database.select().from(form);
+  const session = await auth.api.getSession({
+    headers: await headers(), // from next/headers
+  });
 
-  // const { orgId } = await auth();
+  if (!session?.user) {
+    return redirect('/sign-in');
+  }
 
-  // if (!orgId) {
-  //   notFound();
-  // }
+  const forms = await database
+    .select()
+    .from(form)
+    .where(eq(form.userId, session.user.id));
 
   return (
     <>
-      <Header pages={['Building Your Application']} page="Data Fetching">
-        {/* {env.LIVEBLOCKS_SECRET && (
+      {/* <Header pages={[]} page="Data Fetching">
+        {env.LIVEBLOCKS_SECRET && (
           <CollaborationProvider orgId={orgId}>
             <AvatarStack />
             <Cursors />
           </CollaborationProvider>
-        )} */}
-      </Header>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-          {forms.map((form) => (
-            <div key={form.id} className="aspect-video rounded-xl bg-muted/50">
-              {form.title}
-            </div>
-          ))}
+        )}
+      </Header> */}
+      <div className="space-y-10 p-8">
+        <div className="flex items-center justify-between">
+          <h1 className="font-medium text-2xl">
+            Welcome, {session.user.name.split(' ')[0]}
+          </h1>
+          <Button asChild>
+            <Link href="/generate">
+              <Plus /> Create new form
+            </Link>
+          </Button>
         </div>
-        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+
+        <section className="space-y-4">
+          <h2 className="font-medium text-lg">Recent forms</h2>
+
+          <div className="flex flex-wrap items-stretch gap-4">
+            {forms.map((form) => (
+              <FormCard key={form.id} form={form} />
+            ))}
+          </div>
+        </section>
       </div>
     </>
   );
