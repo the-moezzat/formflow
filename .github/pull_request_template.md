@@ -1,19 +1,26 @@
-## Description
+# Pull Request Description
 
-Please provide a brief description of the changes introduced in this pull request.
+## What does this PR do?
 
-## Related Issues
+<!-- Please include a summary of the change and which issue is fixed. -->
 
-Closes #<issue_number>
+## Why are these changes needed?
 
-## Checklist
+<!-- Please include relevant motivation and context. -->
 
-- [ ] My code follows the code style of this project.
-- [ ] I have performed a self-review of my code.
-- [ ] I have commented my code, particularly in hard-to-understand areas.
-- [ ] I have updated the documentation, if necessary.
-- [ ] I have added tests that prove my fix is effective or my feature works.
-- [ ] New and existing tests pass locally with my changes.
+## How was this tested?
+
+<!-- Please describe the tests that you ran to verify your changes. -->
+
+## Checklist:
+
+- [ ] My code follows the style guidelines of this project
+- [ ] I have performed a self-review of my own code
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have made corresponding changes to the documentation
+- [ ] My changes generate no new warnings
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] New and existing unit tests pass locally with my changes
 
 ## Screenshots (if applicable)
 
