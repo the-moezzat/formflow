@@ -57,7 +57,7 @@ export const FormCard = ({
   );
 
   return (
-    <div className="] flex w-min flex-col items-stretch gap-2">
+    <div className="flex w-min flex-col items-stretch gap-2">
       {href ? <Link href={href}>{cardContent}</Link> : cardContent}
       <div className="flex h-full items-start justify-between ">
         <div className="flex flex-col gap-1 ">
