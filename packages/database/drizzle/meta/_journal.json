@@ -22,6 +22,13 @@
       "when": 1745475752725,
       "tag": "0003_damp_archangel",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1746493369718,
+      "tag": "0004_first_kabuki",
+      "breakpoints": true
     }
   ]
 }
