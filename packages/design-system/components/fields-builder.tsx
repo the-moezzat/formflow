@@ -1,22 +1,26 @@
 'use client';
 import type { FormField as FormFieldType } from '@repo/schema-types/types';
-import type { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
+import * as React from 'react';
+import type {
+  ControllerRenderProps,
+  FieldValues,
+  UseFormReturn,
+} from 'react-hook-form';
+import type * as RPNInput from 'react-phone-number-input';
+import { cn } from '../lib/utils';
+import EmailInput from './form-components/email-input';
+import LongTextInput from './form-components/long-text-input';
+import NumberInput from './form-components/number-input';
+import RatingInput from './form-components/rating-input';
+import ShortTextInput from './form-components/short-text-input';
 import {
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from './ui/form';
-import RatingInput from './form-components/rating-input';
 import { PhoneInput } from './ui/phone-input';
-import NumberInput from './form-components/number-input';
-import EmailInput from './form-components/email-input';
-import ShortTextInput from './form-components/short-text-input';
-import LongTextInput from './form-components/long-text-input';
-import * as React from 'react';
-import type * as RPNInput from 'react-phone-number-input';
-import { cn } from '../lib/utils';
 
 type ClassNameKeys = 'focus' | 'item';
 type ValidClassNames = Partial<Record<ClassNameKeys, string>> & {
@@ -38,7 +42,7 @@ export default function FieldsBuilder({
     },
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     any,
-    undefined
+    FieldValues
   >;
   classNames?: ValidClassNames;
 }) {
