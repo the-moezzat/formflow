@@ -71,7 +71,7 @@ function CreateOrgForm() {
 
       console.log('Creating organization:', data);
 
-      toast('Organization creat', {
+      toast('Organization created', {
         description: `Successfully created organization: ${values.name}`,
       });
 
