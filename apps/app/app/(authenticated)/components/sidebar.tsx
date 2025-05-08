@@ -1,16 +1,9 @@
-'use client';
+import { Button } from '@repo/design-system/components/ui/button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@repo/design-system/components/ui/collapsible';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@repo/design-system/components/ui/dropdown-menu';
 import {
   Sidebar,
   SidebarContent,
@@ -33,21 +26,24 @@ import {
   AudioWaveform,
   ChevronRightIcon,
   Command,
-  FolderIcon,
   FrameIcon,
   GalleryVerticalEnd,
+  HomeIcon,
   LifeBuoyIcon,
   MapIcon,
-  MoreHorizontalIcon,
   PieChartIcon,
+  Plus,
   SendIcon,
   Settings2Icon,
-  ShareIcon,
-  Trash2Icon,
 } from 'lucide-react';
+import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { CreateTeamDialog } from './create-team-dialog';
 import { NavUser } from './nav-user';
 import { TeamSwitcher } from './team-switcher';
+import { auth } from '@repo/auth/server';
+import { headers } from 'next/headers';
+import TeamList from './team-list';
 
 type GlobalSidebarProperties = {
   readonly children: ReactNode;
@@ -137,63 +133,52 @@ const data = {
   ],
 };
 
-export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
-  // const sidebar = useSidebar();
+export const GlobalSidebar = async ({ children }: GlobalSidebarProperties) => {
+  const teams = await auth.api.listOrganizationTeams({
+    headers: await headers(),
+  });
+
+  console.log('teams', teams);
 
   return (
     <>
       <Sidebar variant="inset">
-        <SidebarHeader>
+        <SidebarHeader className="mb-2">
           <TeamSwitcher />
+          <Button asChild>
+            <Link href="/generate">
+              <Plus /> Craft next form
+            </Link>
+          </Button>
         </SidebarHeader>
+
         {/* <Search /> */}
         <SidebarContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link href="/">
+                  <HomeIcon /> Home
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+
           <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-            <SidebarGroupLabel>Teams</SidebarGroupLabel>
+            <div className="flex items-center justify-between">
+              <SidebarGroupLabel>Teams</SidebarGroupLabel>
+              <CreateTeamDialog />
+            </div>
+
             <SidebarMenu>
-              {data.projects.map((item) => (
-                <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.name}</span>
-                    </a>
-                  </SidebarMenuButton>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuAction showOnHover>
-                        <MoreHorizontalIcon />
-                        <span className="sr-only">More</span>
-                      </SidebarMenuAction>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      className="w-48"
-                      side="bottom"
-                      align="end"
-                    >
-                      <DropdownMenuItem>
-                        <FolderIcon className="text-muted-foreground" />
-                        <span>View Project</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <ShareIcon className="text-muted-foreground" />
-                        <span>Share Project</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>
-                        <Trash2Icon className="text-muted-foreground" />
-                        <span>Delete Project</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </SidebarMenuItem>
-              ))}
-              <SidebarMenuItem>
+              <TeamList />
+
+              {/* <SidebarMenuItem>
                 <SidebarMenuButton>
                   <MoreHorizontalIcon />
                   <span>More</span>
                 </SidebarMenuButton>
-              </SidebarMenuItem>
+              </SidebarMenuItem> */}
             </SidebarMenu>
           </SidebarGroup>
 

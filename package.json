@@ -41,11 +41,14 @@
   "dependencies": {
     "@better-fetch/fetch": "^1.1.18",
     "@clack/prompts": "^0.9.1",
+    "@next-safe-action/adapter-react-hook-form": "^1.0.14",
     "@tanstack/react-query": "^5.67.1",
     "commander": "^13.1.0",
     "framer-motion": "^12.9.2",
+    "next-safe-action": "^7.10.8",
     "sonner": "^1.7.2",
-    "uploadthing": "^7.6.0"
+    "uploadthing": "^7.6.0",
+    "zod": "^3.24.1"
   },
   "type": "module"
 }

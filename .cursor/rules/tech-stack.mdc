@@ -1,0 +1,73 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Tech Stack Overview
+
+This project is a modern monorepo built with [Turborepo](mdc:turbo.json) and managed with [pnpm](mdc:pnpm-workspace.yaml). It is designed for scalable, type-safe, and AI-powered form building and analysis. Below is a breakdown of the main technologies and tools used throughout the codebase.
+
+## Frontend
+- **Framework:** [Next.js](mdc:apps/app/package.json) (App Router, SSR, API routes)
+- **UI Library:** [React](mdc:apps/app/package.json)
+- **Component System:** [Shadcn UI](mdc:https:/ui.shadcn.com) (via [design-system package](mdc:packages/design-system/package.json)), [Radix UI](mdc:https:/www.radix-ui.com), [Lucide Icons](mdc:https:/lucide.dev)
+- **Styling:** [Tailwind CSS](mdc:packages/tailwind-config/package.json), [tailwind-merge](mdc:packages/tailwind-config/package.json), [clsx](mdc:packages/design-system/package.json)
+- **State Management:** [Zustand](mdc:apps/app/package.json)
+- **Forms:** [React Hook Form](mdc:apps/app/package.json), [@hookform/resolvers](mdc:packages/design-system/package.json)
+- **Validation:** [Zod](mdc:apps/app/package.json)
+- **Table/Data:** [TanStack Table](mdc:apps/app/package.json)
+
+## Backend
+- **API:** [Next.js API routes](mdc:apps/api/package.json)
+- **ORM:** [Drizzle ORM](mdc:packages/database/package.json)
+- **Database:** [PostgreSQL](mdc:https:/www.postgresql.org) (via [@vercel/postgres](mdc:packages/database/package.json)), [Supabase](mdc:supabase)
+- **Environment Management:** [Doppler](mdc:https:/www.doppler.com)
+
+## AI/ML
+- **AI SDKs:** [ai](mdc:packages/ai/package.json), [@ai-sdk/openai](mdc:packages/ai/package.json), [@ai-sdk/google](mdc:packages/ai/package.json), [ollama-ai-provider](mdc:packages/ai/package.json)
+- **AI Features:** Form generation, response analysis, workflow automation (see [README.md](mdc:README.md))
+
+## Authentication
+- **Provider:** [better-auth](mdc:packages/auth/package.json)
+
+## Collaboration
+- **Real-time:** [Liveblocks](mdc:https:/liveblocks.io) (see [collaboration package](mdc:packages/collaboration))
+
+## Utilities & Tooling
+- **Monorepo:** [Turborepo](mdc:turbo.json)
+- **TypeScript:** [TypeScript](mdc:tsconfig.json) (strict mode, workspace config)
+- **Testing:** [Vitest](mdc:apps/app/package.json), [@testing-library/react](mdc:apps/app/package.json)
+- **Linting/Formatting:** [Biome](mdc:package.json), [Ultracite](mdc:package.json)
+- **Analytics:** [PostHog](mdc:packages/analytics), [@repo/analytics](mdc:packages/analytics)
+- **Payments:** [Stripe](mdc:apps/api/package.json), [@repo/payments](mdc:packages/payments)
+- **Webhooks:** [Svix](mdc:apps/api/package.json), [@repo/webhooks](mdc:packages/webhooks)
+- **Notifications:** [@repo/notifications](mdc:packages/notifications)
+- **SEO:** [@repo/seo](mdc:packages/seo)
+- **Email:** [@repo/email](mdc:packages/email)
+
+## Project Structure
+- **Apps:**
+  - [app](mdc:apps/app) – Main frontend and dashboard
+  - [api](mdc:apps/api) – Backend API
+  - [form-preview](mdc:apps/form-preview) – Form preview
+  - [web](mdc:apps/web) – Marketing site
+  - [docs](mdc:apps/docs) – Documentation
+  - [email](mdc:apps/email) – Email previews
+  - [storybook](mdc:apps/storybook) – Component library
+- **Packages:**
+  - [design-system](mdc:packages/design-system) – UI components
+  - [database](mdc:packages/database) – ORM, schema, migrations
+  - [ai](mdc:packages/ai) – AI/ML logic
+  - [auth](mdc:packages/auth) – Authentication
+  - [analytics](mdc:packages/analytics) – Analytics
+  - [collaboration](mdc:packages/collaboration) – Real-time features
+  - [feature-flags](mdc:packages/feature-flags) – Feature toggles
+  - [notifications](mdc:packages/notifications) – Notification logic
+  - [payments](mdc:packages/payments) – Payment logic
+  - [webhooks](mdc:packages/webhooks) – Webhook logic
+  - [seo](mdc:packages/seo) – SEO utilities
+  - [email](mdc:packages/email) – Email templates
+  - [tailwind-config](mdc:packages/tailwind-config) – Tailwind config
+  - [typescript-config](mdc:packages/typescript-config) – Shared TS config
+
+For more details, see the [README.md](mdc:README.md).

@@ -61,7 +61,9 @@
   },
   "peerDependencies": {
     "@better-fetch/fetch": "^1.1.18",
-    "@tanstack/react-query": "^5.67.1"
+    "@tanstack/react-query": "^5.67.1",
+    "next-safe-action": "^7.10.8",
+    "@next-safe-action/adapter-react-hook-form": "^1.0.14"
   },
   "devDependencies": {
     "@repo/testing": "workspace:*",
