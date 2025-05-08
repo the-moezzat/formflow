@@ -7,7 +7,7 @@ import {
   team,
   user,
   verification,
-} from '@repo/database/schema';
+} from '../database/schema';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { nextCookies } from 'better-auth/next-js';
@@ -19,6 +19,7 @@ import ResetPasswordEmail from '@repo/email/templates/reset-password';
 import VerifyEmail from '@repo/email/templates/verify-email';
 import InviteUserEmail from '@repo/email/templates/invite-user';
 import { keys } from './keys';
+import { teamIconPlugin } from './plugins/team-icon-plugin';
 
 export const auth = betterAuth({
   database: drizzleAdapter(database, {
@@ -103,6 +104,7 @@ export const auth = betterAuth({
     }),
     anonymous(),
     openAPI(),
+    teamIconPlugin(),
     captcha({
       provider: 'cloudflare-turnstile', // or google-recaptcha, hcaptcha
       secretKey: keys().TURNSTILE_SECRET_KEY,

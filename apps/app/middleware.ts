@@ -42,8 +42,6 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-    console.log(organization);
-
 
   if (request.nextUrl.pathname !== '/welcome' && organization?.length === 0) {
     return NextResponse.redirect(new URL('/welcome', request.url));

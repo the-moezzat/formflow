@@ -2,11 +2,8 @@ import { auth } from '@repo/auth/server';
 import { database } from '@repo/database';
 import { eq } from '@repo/database';
 import { form } from '@repo/database/schema';
-import { Button } from '@repo/design-system/components/ui/button';
-import { Plus } from 'lucide-react';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { FormCard } from './components/form-card';
 
@@ -53,11 +50,11 @@ const App = async () => {
           <h1 className="font-medium text-2xl">
             Welcome, {session.user.name.split(' ')[0]}
           </h1>
-          <Button asChild>
+          {/* <Button asChild>
             <Link href="/generate">
               <Plus /> Create new form
             </Link>
-          </Button>
+          </Button> */}
         </div>
 
         <section className="space-y-4">

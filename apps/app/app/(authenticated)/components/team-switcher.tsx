@@ -30,12 +30,14 @@ import {
   AvatarImage,
   AvatarFallback,
 } from '@repo/design-system/components/ui/avatar';
-import CreateOrgForm from './create-org-form';
+import CreateWorkspaceForm from '@repo/auth/components/create-workspace-form';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function TeamSwitcher() {
   const { isMobile } = useSidebar();
   const { data: organizations } = authClient.useListOrganizations();
   const { data: activeOrganization } = authClient.useActiveOrganization();
+  const queryClient = useQueryClient();
 
   return (
     <SidebarMenu>
@@ -80,11 +82,14 @@ export function TeamSwitcher() {
                 organizations?.map((org, index) => (
                   <DropdownMenuItem
                     key={org.name}
-                    onClick={async () =>
+                    onClick={async () => {
                       await authClient.organization.setActive({
                         organizationId: org.id,
-                      })
-                    }
+                      });
+                      queryClient.invalidateQueries({
+                        queryKey: ['teams', org.id],
+                      });
+                    }}
                     className="gap-2 p-2"
                   >
                     <div className="flex size-6 items-center justify-center rounded-md border">
@@ -128,7 +133,7 @@ export function TeamSwitcher() {
                 Add a new organization to your account
               </DialogDescription>
             </DialogHeader>
-            <CreateOrgForm />
+            <CreateWorkspaceForm />
           </DialogContent>
         </Dialog>
       </SidebarMenuItem>
