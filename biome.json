@@ -12,8 +12,8 @@
       "packages/collaboration/config.ts",
       "apps/docs/**/*.json",
       "apps/email/.react-email/**",
-      "packages/auth/**",
-      "packages/database/*.ts"
+      "packages/database/*.ts",
+      "packages/auth/plugins/*.ts"
     ]
   }
 }

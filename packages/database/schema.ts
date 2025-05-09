@@ -136,5 +136,5 @@ export const team = pgTable("team", {
   organizationId: text('organization_id').notNull().references(()=> organization.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at').notNull(),
   updatedAt: timestamp('updated_at'),
-  icon: text('icon')
+  icon: text('icon').default('circle-dashed'),
 });

@@ -41,8 +41,6 @@ import type { ReactNode } from 'react';
 import { CreateTeamDialog } from './create-team-dialog';
 import { NavUser } from './nav-user';
 import { TeamSwitcher } from './team-switcher';
-import { auth } from '@repo/auth/server';
-import { headers } from 'next/headers';
 import TeamList from './team-list';
 
 type GlobalSidebarProperties = {
@@ -134,11 +132,9 @@ const data = {
 };
 
 export const GlobalSidebar = async ({ children }: GlobalSidebarProperties) => {
-  const teams = await auth.api.listOrganizationTeams({
-    headers: await headers(),
-  });
-
-  console.log('teams', teams);
+  // const teams = await auth.api.listOrganizationTeams({
+  //   headers: await headers(),
+  // });
 
   return (
     <>

@@ -19,31 +19,33 @@ import { Skeleton } from '@repo/design-system/components/ui/skeleton';
 import { useQuery } from '@tanstack/react-query';
 import {
   FolderIcon,
-  FrameIcon,
   MoreHorizontalIcon,
   ShareIcon,
   Trash2Icon,
 } from 'lucide-react';
 import Link from 'next/link';
+import {
+  Icon,
+  type IconName,
+} from '@repo/design-system/components/ui/icon-picker';
 
 type Team = InferSelectModel<typeof team>;
 
 export default function TeamList() {
   const { data: activeOrganization } = authClient.useActiveOrganization();
 
-  const { data, isLoading, isFetching } = useQuery<Team[]>({
+  const { data, isLoading } = useQuery<Team[]>({
     queryKey: ['teams', activeOrganization?.id],
     queryFn: async () => {
-      const { data, error } = await authClient.organization.listTeams();
+      const { data } = await authClient.organization.listTeams();
       return (data ?? []) as Team[];
     },
   });
-  console.log('teams', data);
 
   if (isLoading) {
     return (
       <div>
-        {[...Array(3)].map((_, i) => (
+        {[...new Array(3)].map((_, i) => (
           <Skeleton
             key={i}
             className="mb-2 h-6 w-full rounded-md bg-gray-100"
@@ -59,7 +61,8 @@ export default function TeamList() {
         <SidebarMenuItem key={team.name}>
           <SidebarMenuButton asChild>
             <Link href={`/team/${team.id}`}>
-              <FrameIcon />
+              {/* <FrameIcon /> */}
+              <Icon name={(team.icon as IconName) ?? 'circle-dashed'} />
               <span>{team.name}</span>
             </Link>
           </SidebarMenuButton>
