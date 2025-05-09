@@ -8,11 +8,8 @@ export default async function Page({
 }) {
   const { teamId } = await params;
 
-  console.log(teamId);
-
   const teams = await database.select().from(team).where(eq(team.id, teamId));
 
-  console.log(teams);
 
   return <div>{teams[0].name}</div>;
 }

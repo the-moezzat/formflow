@@ -23,13 +23,16 @@ export const createTeamAction = actionClient
       };
     }
 
-    const { teamName } = parsedInput;
+    const { teamName, icon } = parsedInput;
 
     const team = await auth.api.createTeam({
       body: {
         name: teamName,
         organizationId: session.session.activeOrganizationId ?? '',
       },
+      query: {
+        icon: icon ?? 'circle-dashed',
+      }
     });
 
     revalidatePath('/');
