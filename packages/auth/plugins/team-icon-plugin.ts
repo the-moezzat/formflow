@@ -12,18 +12,6 @@ export const teamIconPlugin = () => {
     return {
         id: "team-icon-plugin",
         hooks: {
-            // before: [{
-            //     matcher: (context) => {
-            //         return context.path === "/organization/create-team";
-            //     },
-            //     handler: createAuthMiddleware(async (ctx) => {
-            //         //do something before the request
-            //         console.log("ctx", ctx);
-            //         return {
-            //             context: ctx, // if you want to modify the context
-            //         };
-            //     }),
-            // }],
             after: [{
                 matcher: (context) => {
                     return context.path === "/organization/create-team";
@@ -38,41 +26,21 @@ export const teamIconPlugin = () => {
 
                   return updatedTeam
                 }),
+            }, {
+                matcher: (context) => {
+                    return context.path === "/organization/update-team";
+                },
+                handler: createAuthMiddleware(async (ctx) => {
+                    const teamUpdated = ctx.context.returned as Team
+
+                    const updatedTeam = await database.update(team).set({
+                        icon: ctx.query?.icon ?? 'circle-dashed'
+                    }).where(eq(team.id, teamUpdated.id))
+
+                    return updatedTeam
+                }),
             }],
         },
-    //         endpoints: {
-    //   createTeamWithIcon: createAuthEndpoint("/organization/create-team-with-icon", {
-    //     method: "POST",
-    //     body:   z.object({
-    //         name: z.string(),
-    //         organizationId: z.string().optional(),
-    //         icon_url: z.string().optional(),
-    //     }),
-    //   }, async (ctx) => {
-    //     const { name, organizationId, icon_url } = ctx.body;
-        
-    //     // Call the original createTeam method from the organization plugin
-    //     const organizationPlugin = ctx.context.options.plugins?.find((plugin) => plugin.id === "organization");
-
-    //     const team = await organizationPlugin?.createTeam(ctx.context, {
-    //       name,
-    //       organizationId
-    //     });
-        
-    //     // Add the icon if provided
-    //     if (icon_url) {
-    //       await ctx.context.db.team.update({
-    //         where: { id: team.id },
-    //         data: { icon_url }
-    //       });
-          
-    //       team.icon_url = icon_url;
-    //     }
-        
-    //     return ctx.json(team);
-    //   })
-    // }
-
         schema: {
             team: {
                 fields: {

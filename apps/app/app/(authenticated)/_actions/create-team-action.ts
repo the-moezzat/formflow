@@ -8,9 +8,6 @@ import { revalidatePath } from 'next/cache';
 export const createTeamAction = actionClient
   .schema(createTeamSchema)
   .action(async ({ parsedInput }) => {
-
-    console.log("parsedInput", parsedInput)
-
     const session = await auth.api.getSession({
       headers: await headers(),
     });
