@@ -43,7 +43,7 @@ export function TeamSwitcher() {
     <SidebarMenu>
       <SidebarMenuItem>
         <Dialog>
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
                 size="lg"
@@ -51,7 +51,7 @@ export function TeamSwitcher() {
               >
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={activeOrganization?.logo || ''}
+                    src={activeOrganization?.logo ?? ''}
                     alt={activeOrganization?.name}
                   />
                   <AvatarFallback className="rounded-lg">

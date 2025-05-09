@@ -24,6 +24,7 @@ import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { createTeamAction } from '../_actions/create-team-action';
 import { createTeamSchema } from '../types/create-team-schema';
+import { log } from '@repo/observability/log';
 
 // Define team type using the same type from team-list.tsx
 type Team = InferSelectModel<typeof team>;
@@ -134,7 +135,9 @@ export function CreateTeamForm({
             queryClient.setQueryData<Team[]>(
               ['teams', activeOrganization?.id],
               (old = []) => {
-                if (!old) return [];
+                if (!old) {
+                  return [];
+                }
                 return old.filter((team) => !team.id.startsWith('optimistic-'));
               }
             );
@@ -144,7 +147,7 @@ export function CreateTeamForm({
             pendingTeamNamesRef.current.clear();
 
             // Show error
-            console.error('Team creation error:', error);
+            log.error('Team creation error:', error);
             toast.error('Failed to create team');
             onError?.();
           },

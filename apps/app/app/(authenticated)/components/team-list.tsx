@@ -3,36 +3,24 @@
 import { authClient } from '@repo/auth/client';
 import type { InferSelectModel } from '@repo/database';
 import type { team } from '@repo/database/schema';
-import {
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from '@repo/design-system/components/ui/dropdown-menu';
-import { SidebarMenuAction } from '@repo/design-system/components/ui/sidebar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@repo/design-system/components/ui/dropdown-menu';
-import { SidebarMenuButton } from '@repo/design-system/components/ui/sidebar';
-import { SidebarMenuItem } from '@repo/design-system/components/ui/sidebar';
 import { Skeleton } from '@repo/design-system/components/ui/skeleton';
 import { useQuery } from '@tanstack/react-query';
+import { TeamMenuItem } from './team-menu-item';
 import {
-  FolderIcon,
-  MoreHorizontalIcon,
-  ShareIcon,
-  Trash2Icon,
-} from 'lucide-react';
-import Link from 'next/link';
-import {
-  Icon,
-  type IconName,
-} from '@repo/design-system/components/ui/icon-picker';
+  DialogContent,
+  DialogHeader,
+  Dialog,
+  DialogDescription,
+  DialogTitle,
+} from '@repo/design-system/components/ui/dialog';
+import { UpdateTeamForm } from './update-team-form';
+import { useUpdateTeamStore } from '../_store/use-update-team-store';
 
 type Team = InferSelectModel<typeof team>;
 
 export default function TeamList() {
   const { data: activeOrganization } = authClient.useActiveOrganization();
+  const { isOpen, team, setIsOpen, reset } = useUpdateTeamStore();
 
   const { data, isLoading } = useQuery<Team[]>({
     queryKey: ['teams', activeOrganization?.id],
@@ -56,41 +44,31 @@ export default function TeamList() {
   }
 
   return (
-    <div>
-      {data?.map((team) => (
-        <SidebarMenuItem key={team.name}>
-          <SidebarMenuButton asChild>
-            <Link href={`/team/${team.id}`}>
-              {/* <FrameIcon /> */}
-              <Icon name={(team.icon as IconName) ?? 'circle-dashed'} />
-              <span>{team.name}</span>
-            </Link>
-          </SidebarMenuButton>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <SidebarMenuAction showOnHover>
-                <MoreHorizontalIcon />
-                <span className="sr-only">More</span>
-              </SidebarMenuAction>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48" side="bottom" align="end">
-              <DropdownMenuItem>
-                <FolderIcon className="text-muted-foreground" />
-                <span>View Team</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <ShareIcon className="text-muted-foreground" />
-                <span>Share Team</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Trash2Icon className="text-muted-foreground" />
-                <span>Delete Team</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </SidebarMenuItem>
-      ))}
-    </div>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <div>
+        {data?.map((team) => (
+          <TeamMenuItem
+            key={team.id}
+            team={team}
+            organizationId={activeOrganization?.id}
+          />
+        ))}
+      </div>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Create Organization</DialogTitle>
+          <DialogDescription>
+            Add a new organization to your account
+          </DialogDescription>
+        </DialogHeader>
+        <UpdateTeamForm
+          team={team}
+          onClose={() => {
+            setIsOpen(false);
+            reset();
+          }}
+        />
+      </DialogContent>
+    </Dialog>
   );
 }

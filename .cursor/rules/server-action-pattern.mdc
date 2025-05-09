@@ -1,0 +1,98 @@
+---
+description: create type safe server action 
+globs: 
+alwaysApply: false
+---
+# Server Action Pattern
+
+This codebase uses [Next Safe Action](mdc:https:/next-safe-action.dev) to create type-safe server actions with validation.
+
+## Standard Pattern
+
+1. Create a Zod schema for input validation
+2. Use `actionClient.schema(schema).action()` pattern
+3. Check auth session for protected routes
+4. Return consistent response structure
+
+## Example Implementation
+
+```typescript
+'use server';
+import { auth } from '@repo/auth/server';
+import { actionClient } from '@repo/design-system/lib/safe-action';
+import { headers } from 'next/headers';
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
+
+// 1. Define input schema with Zod
+const exampleSchema = z.object({
+  someField: z.string().min(3),
+  // other fields...
+});
+
+export const exampleAction = actionClient
+  .schema(exampleSchema)
+  .action(async ({ parsedInput }) => {
+    // 2. Check authentication for protected routes
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+        data: {},
+      };
+    }
+
+    // 3. Extract validated input
+    const { someField } = parsedInput;
+
+    // 4. Perform action logic
+    // const result = await someOperation();
+
+    // 5. Revalidate paths if needed
+    revalidatePath('/some-path');
+
+    // 6. Return consistent response structure
+    return {
+      success: true,
+      data: {
+        // response data
+      },
+    };
+  });
+```
+
+See [create-team-action.ts](mdc:apps/app/app/(authenticated)/_actions/create-team-action.ts) for a real example.
+
+## Response Format
+
+All server actions should return a consistent object structure:
+
+```typescript
+{
+  success: boolean;
+  error?: string;
+  data: Record<string, any>;
+}
+```
+
+## Authentication Pattern
+
+For protected routes, always check the user session before proceeding with the action:
+
+```typescript
+const session = await auth.api.getSession({
+  headers: await headers(),
+});
+
+if (!session) {
+  return {
+    success: false,
+    error: 'Unauthorized',
+    data: {},
+  };
+}
+```
