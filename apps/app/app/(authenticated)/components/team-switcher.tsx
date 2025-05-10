@@ -32,7 +32,7 @@ import {
 } from '@repo/design-system/components/ui/avatar';
 import CreateWorkspaceForm from '@repo/auth/components/create-workspace-form';
 import { useQueryClient } from '@tanstack/react-query';
-
+import Link from 'next/link';
 export function TeamSwitcher() {
   const { isMobile } = useSidebar();
   const { data: organizations } = authClient.useListOrganizations();
@@ -91,19 +91,22 @@ export function TeamSwitcher() {
                       });
                     }}
                     className="gap-2 p-2"
+                    asChild
                   >
-                    <div className="flex size-6 items-center justify-center rounded-md border">
-                      <Avatar className="h-8 w-8 rounded-lg">
-                        <AvatarImage src={org.logo || ''} alt={org?.name} />
-                        <AvatarFallback className="rounded-lg">
-                          {org?.name
-                            .split(' ')
-                            .reduce((prev, curr) => prev + curr[0], '')}
-                        </AvatarFallback>
-                      </Avatar>{' '}
-                    </div>
-                    {org.name}
-                    <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                    <Link href={'/'}>
+                      <div className="flex size-6 items-center justify-center rounded-md border">
+                        <Avatar className="h-8 w-8 rounded-lg">
+                          <AvatarImage src={org.logo || ''} alt={org?.name} />
+                          <AvatarFallback className="rounded-lg">
+                            {org?.name
+                              .split(' ')
+                              .reduce((prev, curr) => prev + curr[0], '')}
+                          </AvatarFallback>
+                        </Avatar>{' '}
+                      </div>
+                      {org.name}
+                      <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                    </Link>
                   </DropdownMenuItem>
                 ))
               ) : (
