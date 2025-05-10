@@ -56,9 +56,9 @@ export default function TeamList() {
       </div>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create Organization</DialogTitle>
+          <DialogTitle>Update Team</DialogTitle>
           <DialogDescription>
-            Add a new organization to your account
+            Modify the details of the selected team
           </DialogDescription>
         </DialogHeader>
         <UpdateTeamForm
