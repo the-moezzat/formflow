@@ -43,6 +43,7 @@ jobs:
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
           DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
           
