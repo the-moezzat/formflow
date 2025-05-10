@@ -1,0 +1,1 @@
+ALTER TABLE "team" ADD COLUMN "icon" text DEFAULT 'circle-dashed';
