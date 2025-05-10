@@ -35,7 +35,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       
       - name: Run database migrations
-        run: pnpm db:push --filter database
+        run: pnpm db:push
         env:
           # Database connection settings from GitHub secrets
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
