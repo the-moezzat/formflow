@@ -1,13 +1,13 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { FormField as FormFieldType } from '@repo/schema-types/types';
-import { useForm } from 'react-hook-form';
-import { Form } from './ui/form';
 import { useQueryState } from 'nuqs';
-import { zodGenerator } from '../lib/generators';
-import type { z } from 'zod';
-import FieldsBuilder from './fields-builder';
 import type { ReactNode } from 'react';
+import { useForm } from 'react-hook-form';
+import type { z } from 'zod';
+import { zodGenerator } from '../lib/generators';
+import FieldsBuilder from './fields-builder';
+import { Form } from './ui/form';
 
 type FormBuilderBaseProps = {
   fields: FormFieldType[];
