@@ -1,4 +1,3 @@
-import { Button } from '@repo/design-system/components/ui/button';
 import {
   Collapsible,
   CollapsibleContent,
@@ -32,16 +31,16 @@ import {
   LifeBuoyIcon,
   MapIcon,
   PieChartIcon,
-  Plus,
   SendIcon,
   Settings2Icon,
 } from 'lucide-react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { CreateTeamDialog } from './create-team-dialog';
-import { NavUser } from './nav-user';
-import { TeamSwitcher } from './team-switcher';
-import TeamList from './team-list';
+import { CreateTeamDialog } from '../../components/create-team-dialog';
+import { NavUser } from '../../components/nav-user';
+import TeamList from '../../components/team-list';
+import { TeamSwitcher } from '../../components/team-switcher';
+import CreateFormModel from '../create-form/create-form-model';
 
 type GlobalSidebarProperties = {
   readonly children: ReactNode;
@@ -141,11 +140,12 @@ export const GlobalSidebar = async ({ children }: GlobalSidebarProperties) => {
       <Sidebar variant="inset">
         <SidebarHeader className="mb-2">
           <TeamSwitcher />
-          <Button asChild>
+          <CreateFormModel />
+          {/* <Button asChild>
             <Link href="/generate">
               <Plus /> Craft next form
             </Link>
-          </Button>
+          </Button> */}
         </SidebarHeader>
 
         {/* <Search /> */}
