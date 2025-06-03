@@ -2,16 +2,19 @@
 
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
+import type { FormStyle } from "@repo/schema-types/types";
 import { database } from "../index";
 import { form, formResponse } from "../schema";
 
 export async function createForm({
   userId,
   title,
+  style = "multiple",
   encodedForm,
 }: {
   userId: string;
   title: string;
+  style?: FormStyle;
   encodedForm: string;
 }) {
   return await database
@@ -20,6 +23,7 @@ export async function createForm({
       id: randomUUID(),
       userId,
       title,
+      style,
       encodedForm,
       formHistory: [encodedForm],
       updatedAt: new Date().toISOString(),
@@ -27,13 +31,42 @@ export async function createForm({
     .returning();
 }
 
+export async function createBlankForm({
+  userId,
+  title,
+  style,
+}: {
+  userId: string;
+  title: string;
+  style?: FormStyle;
+}) {
+  return await database.insert(form).values({
+    id: randomUUID(),
+    userId,
+    title,
+    style,
+    encodedForm:
+      "eJyFizsKgDAQBa8iWxsJGkXSeQdtFIvgrhDwR7JWkru7eAG7Yd68B9jzRmBhOD7CbD3DDjkgxSX4i_15RJnFrJ42FJ7mHHZih44d2AeWQI4JO5as1GWtdKN01Wtj69YaU5i2GuV-X_ifpfQCSroqvA",
+    formHistory: [
+      "eJyFizsKgDAQBa8iWxsJGkXSeQdtFIvgrhDwR7JWkru7eAG7Yd68B9jzRmBhOD7CbD3DDjkgxSX4i_15RJnFrJ42FJ7mHHZih44d2AeWQI4JO5as1GWtdKN01Wtj69YaU5i2GuV-X_ifpfQCSroqvA",
+    ],
+    currentVersion: 0,
+    responseCount: 0,
+    viewCount: 0,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }).returning();
+}
+
 export async function updateForm({
   formId,
   title,
+  style,
   newEncodedForm,
 }: {
   formId: string;
   title?: string;
+  style?: FormStyle;
   newEncodedForm?: string;
 }) {
   // First get the current form
@@ -55,6 +88,7 @@ export async function updateForm({
     .update(form)
     .set({
       title: title ?? currentForm.title,
+      style: style !== undefined ? style : currentForm.style,
       encodedForm: newEncodedForm ?? currentForm.encodedForm,
       formHistory,
       currentVersion: newEncodedForm
