@@ -1,23 +1,23 @@
-import { createOpenAI } from '@ai-sdk/openai';
-import { createOllama } from 'ollama-ai-provider';
-import { keys } from '../keys';
-import { google } from '@ai-sdk/google';
-import type { LanguageModelV1 } from '@ai-sdk/provider';
+import { google } from "@ai-sdk/google";
+import { createOpenAI } from "@ai-sdk/openai";
+import type { EmbeddingModelV3, LanguageModelV3 } from "@ai-sdk/provider";
+import type { LanguageModel } from "ai";
+import { createOllama } from "ollama-ai-provider";
+import { keys } from "../keys";
 
 export const ollama = createOllama();
 export const openaiClient = createOpenAI({
   apiKey: keys().OPENAI_API_KEY,
-  compatibility: 'strict',
 });
 
 export const models: {
-  chat: LanguageModelV1;
-  local: LanguageModelV1;
-  google: LanguageModelV1;
-  embeddings: LanguageModelV1;
+  chat: LanguageModelV3;
+  local: LanguageModel;
+  google: LanguageModelV3;
+  embeddings: EmbeddingModelV3;
 } = {
-  chat: openaiClient('gpt-4o-mini'),
-  local: ollama('llama3.1:latest'),
-  google: google('gemini-2.0-flash-lite-preview-02-05'),
-  embeddings: openaiClient('text-embedding-3-small'),
+  chat: openaiClient("gpt-5-nano"),
+  local: ollama("llama3.2:latest") as unknown as LanguageModel,
+  google: google("gemini-3.1-flash-lite-preview"),
+  embeddings: openaiClient.embedding("text-embedding-3-small"),
 };

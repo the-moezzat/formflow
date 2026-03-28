@@ -1,14 +1,14 @@
 'use server';
-import { generateObject } from '@repo/ai';
-import { models } from '@repo/ai/lib/models';
-import { log } from '@repo/observability/log';
 import { encodeJsonData } from '@/utils/formEncoder';
-// import { redirect } from 'next/navigation';
-import { formSchema } from '@repo/schema-types/schema';
-import { env } from '@/env';
+import { Output, generateText } from '@repo/ai';
+import { models } from '@repo/ai/lib/models';
 import { withTracing } from '@repo/analytics/posthog';
 import { analytics } from '@repo/analytics/posthog/server';
 import { auth } from '@repo/auth/server';
+import { log } from '@repo/observability/log';
+// import { redirect } from 'next/navigation';
+import { formSchema } from '@repo/schema-types/schema';
+import type { GeneratedForm } from '@repo/schema-types/types/form-types';
 import { headers } from 'next/headers';
 
 type FormState = {
@@ -19,11 +19,11 @@ export default async function generateEdit(_: FormState, data: FormData) {
   const prompt: string = data.get('prompt') as string;
   const decodedForm = data.get('form') as string;
   const session = await auth.api.getSession({
-  headers: await headers(), // from next/headers
-});
-if (!session?.user) {
+    headers: await headers(), // from next/headers
+  });
+  if (!session?.user) {
     throw new Error('You must be signed in to add an item to your cart');
-}
+  }
 
   log.info(prompt);
   log.info(decodedForm);
@@ -38,9 +38,12 @@ if (!session?.user) {
     posthogGroups: { company: session.session.activeOrganizationId }, // optional
   });
 
-  const object = await generateObject({
-    // model: models.google,
-    model: env.ENV === 'DEV' ? models.local : google,
+  const {
+    output: editedFormRaw,
+    finishReason,
+    usage,
+  } = await generateText({
+    model: google,
     messages: [
       {
         role: 'user',
@@ -51,8 +54,8 @@ if (!session?.user) {
       'You are FormFlow, an intelligent form editing assistant. Your task is to modify existing forms based on user instructions.\n\n' +
       '## Editing Task\n' +
       '- You will receive a JSON representation of an existing form and edit instructions\n' +
-      '- Apply the requested changes precisely while preserving the form\'s overall structure\n' +
-      '- Maintain the form\'s logical flow and organization after edits\n\n' +
+      "- Apply the requested changes precisely while preserving the form's overall structure\n" +
+      "- Maintain the form's logical flow and organization after edits\n\n" +
       '## Types of Edits to Support\n' +
       '- Adding new fields/questions at specific positions\n' +
       '- Removing existing fields/questions\n' +
@@ -77,21 +80,30 @@ if (!session?.user) {
       '- Return the complete modified form as valid JSON\n' +
       '- Ensure the modified form validates against the schema\n' +
       '- Include all fields, not just the modified ones',
-    schema: formSchema,
+    output: Output.object({
+      // biome-ignore lint/suspicious/noExplicitAny: formSchema is deeply nested; AI SDK 6 hits TS recursion limits
+      schema: formSchema as any,
+    }),
     maxRetries: 3,
   });
 
+  if (!editedFormRaw) {
+    throw new Error('AI did not return a valid form object');
+  }
+
+  const editedForm = editedFormRaw as GeneratedForm;
+
   const form = {
-    ...object.object,
+    ...editedForm,
     metadata: {
-      createdAt: object.object.metadata?.createdAt,
+      createdAt: editedForm.metadata?.createdAt,
       updatedAt: new Date().toISOString(),
     },
   };
 
-  log.debug('Form finish reason', { finishReason: object.finishReason });
+  log.debug('Form finish reason', { finishReason });
   log.debug('Form Object', form);
-  log.debug('Token consumed', object.usage);
+  log.debug('Token consumed', usage);
 
   //   redirect(`/form-editor?form=${encodeJsonData(object.object)}`);
 

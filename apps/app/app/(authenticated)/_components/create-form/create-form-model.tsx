@@ -26,6 +26,7 @@ import {
 import { cn } from '@repo/design-system/lib/utils';
 import CreateBlank from './create-blank';
 import type { ReactNode } from 'react';
+import CreateWithAI from './create-with-ai';
 
 interface SubTab {
   id: string;
@@ -55,6 +56,7 @@ const formCreationOptions: FormCreationOption[] = [
     label: 'Create with AI',
     isSpecial: true,
     isClickable: true,
+    content: <CreateWithAI />,
   },
   {
     id: 'scratch',
@@ -144,7 +146,7 @@ export default function CreateFormModel() {
       </DialogTrigger>
       <Tabs defaultValue="ai" orientation="vertical">
         <DialogContent className="grid h-[450px] max-w-5xl grid-cols-[4fr_auto_12fr] items-center gap-0 border-none bg-transparent shadow-none">
-          <div className="h-full space-y-8 rounded-xl rounded-l-2xl bg-white p-4">
+          <div className="h-full space-y-6 rounded-xl rounded-l-2xl bg-white p-4">
             <DialogHeader>
               <DialogTitle className="text-gray-800 text-lg">
                 Create your next form
@@ -210,12 +212,11 @@ export default function CreateFormModel() {
                               key={subTab.id}
                               value={subTab.id}
                               className="group w-full items-start p-0 data-[state=active]:bg-transparent data-[state=active]:text-inherit data-[state=active]:shadow-none"
-                              asChild
                             >
                               <div className="flex w-full items-baseline gap-1 self-start">
                                 <>
                                   <span className="inline-block h-6 w-4 rounded-bl-xl border-b border-l" />
-                                  <span className="block w-full rounded-lg px-2 py-1 text-gray-600 text-sm transition-colors hover:bg-gray-100 group-data-[state=active]:bg-gray-100">
+                                  <span className="block w-full rounded-lg px-2 py-1 text-start text-gray-600 text-sm transition-colors hover:bg-gray-100 group-data-[state=active]:bg-gray-100">
                                     {subTab.label}
                                   </span>
                                 </>

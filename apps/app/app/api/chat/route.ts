@@ -1,16 +1,19 @@
-import { streamText } from '@repo/ai';
-import { log } from '@repo/observability/log';
+import { type UIMessage, convertToModelMessages, streamText } from '@repo/ai';
 import { models } from '@repo/ai/lib/models';
-import { analytics } from '@repo/analytics/posthog/server';
 import { withTracing } from '@repo/analytics/posthog';
+import { analytics } from '@repo/analytics/posthog/server';
 import { auth } from '@repo/auth/server';
+import { log } from '@repo/observability/log';
 import { headers } from 'next/headers';
 
 export const POST = async (req: Request) => {
   const body = await req.json();
 
   log.info('🤖 Chat request received.', { body });
-  const { messages, formResponse } = body;
+  const { messages, formResponse } = body as {
+    messages: UIMessage[];
+    formResponse: unknown;
+  };
 
   const session = await auth.api.getSession({
     headers: await headers(), // from next/headers
@@ -48,9 +51,9 @@ export const POST = async (req: Request) => {
       
       Always be helpful, accurate, and concise. If you're asked to filter data, return the filtered results in a clear format.
       If you're not sure about something, admit it rather than making up information.`,
-    messages,
+    messages: await convertToModelMessages(messages),
   });
 
   log.info('🤖 Streaming response...');
-  return result.toDataStreamResponse();
+  return result.toUIMessageStreamResponse();
 };

@@ -1,7 +1,7 @@
 'use server';
 import { env } from '@/env';
 import { encodeJsonData } from '@/utils/formEncoder';
-import { generateObject } from '@repo/ai';
+import { Output, generateText } from '@repo/ai';
 import { models } from '@repo/ai/lib/models';
 import { withTracing } from '@repo/analytics/posthog';
 import { analytics } from '@repo/analytics/posthog/server';
@@ -9,6 +9,7 @@ import { auth } from '@repo/auth/server';
 import { createForm } from '@repo/database/services/form';
 import { log } from '@repo/observability/log';
 import { formSchema } from '@repo/schema-types/schema';
+import type { GeneratedForm } from '@repo/schema-types/types/form-types';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -35,18 +36,18 @@ type SessionResult = {
  */
 async function getOrCreateSession(): Promise<SessionResult> {
   const headersList = await headers();
-  
+
   // Try to get existing session
   let session = await auth.api.getSession({ headers: headersList });
-  
+
   // If no session exists, create an anonymous user
   if (!session) {
     try {
       await auth.api.signInAnonymous({ headers: headersList });
-      
+
       // Get the updated session after anonymous sign-in
       session = await auth.api.getSession({ headers: headersList });
-      
+
       if (!session?.user) {
         log.error('Failed to create anonymous user');
         throw new Error('Failed to create anonymous user');
@@ -56,21 +57,24 @@ async function getOrCreateSession(): Promise<SessionResult> {
       throw new Error('Error creating anonymous user');
     }
   }
-  
+
   if (!session.user.id) {
     throw new Error('User ID is missing');
   }
-  
-  return { 
-    session, 
-    user: session.user 
+
+  return {
+    session,
+    user: session.user,
   };
 }
 
 /**
  * Configure analytics tracing for the AI model
  */
-function configureModelWithAnalytics(userId: string, organizationId?: string | null) {
+function configureModelWithAnalytics(
+  userId: string,
+  organizationId?: string | null
+) {
   return withTracing(models.google, analytics, {
     posthogDistinctId: userId,
     posthogProperties: { type: 'generation', paid: true },
@@ -82,15 +86,22 @@ function configureModelWithAnalytics(userId: string, organizationId?: string | n
 /**
  * Generate a form based on the provided prompt using AI
  */
- function generateFormContent(prompt: string, userId: string, organizationId?: string | null) {
+function generateFormContent(
+  prompt: string,
+  userId: string,
+  organizationId?: string | null
+) {
   const tracedModel = configureModelWithAnalytics(userId, organizationId);
   const model = env.ENV === 'DEV' ? models.local : tracedModel;
-  
-  return generateObject({
+
+  return generateText({
     model,
     messages: [{ role: 'user', content: prompt }],
     system: getFormGenerationSystemPrompt(),
-    schema: formSchema,
+    output: Output.object({
+      // biome-ignore lint/suspicious/noExplicitAny: formSchema is deeply nested; AI SDK 6 hits TS recursion limits
+      schema: formSchema as any,
+    }),
     maxRetries: 3,
   });
 }
@@ -99,7 +110,8 @@ function configureModelWithAnalytics(userId: string, organizationId?: string | n
  * Get the system prompt for form generation
  */
 function getFormGenerationSystemPrompt() {
-  return 'You are FormFlow, an expert form creation assistant designed to replace Google Forms. Your task is to generate professional, user-friendly forms based on user descriptions.\n\n' +
+  return (
+    'You are FormFlow, an expert form creation assistant designed to replace Google Forms. Your task is to generate professional, user-friendly forms based on user descriptions.\n\n' +
     '## Form Structure Guidelines\n' +
     '- Create forms that are logical, intuitive, and well-organized\n' +
     '- Group related questions together\n' +
@@ -122,7 +134,8 @@ function getFormGenerationSystemPrompt() {
     '## Output Conformance\n' +
     '- Strictly follow the provided form schema structure\n' +
     '- Ensure all generated fields will validate against the schema\n' +
-    '- Focus on creating a form that will be intuitive for end users to complete';
+    '- Focus on creating a form that will be intuitive for end users to complete'
+  );
 }
 
 /**
@@ -135,47 +148,52 @@ export default async function generateForm(_: FormState, data: FormData) {
     if (!prompt) {
       throw new Error('No prompt provided');
     }
-    
+
     log.info('Starting form generation with prompt', { prompt });
-    
+
     // Get or create a user session
     const { user, session } = await getOrCreateSession();
-    
+
     // Generate the form
     const result = await generateFormContent(
-      prompt, 
-      user.id, 
+      prompt,
+      user.id,
       session.session?.activeOrganizationId
     );
-    
+
     // Add metadata to the form
     const timestamp = new Date().toISOString();
+    if (!result.output) {
+      throw new Error('AI did not return a valid form object');
+    }
+
+    const generated = result.output as GeneratedForm;
     const form = {
-      ...result.object,
+      ...generated,
       metadata: {
         createdAt: timestamp,
         updatedAt: timestamp,
       },
     };
-    
+
     // Log results
-    log.debug('Form generation complete', { 
+    log.debug('Form generation complete', {
       finishReason: result.finishReason,
-      tokenUsage: result.usage 
+      tokenUsage: result.usage,
     });
-    
+
     // Save the form to the database
     const databaseForm = await createForm({
       userId: user.id,
       title: form.title,
       encodedForm: encodeJsonData(form),
     });
-    
+
     log.info('Form saved to database', { formId: databaseForm[0].id });
-    
+
     // Redirect to the form page
     redirect(`/${databaseForm[0].id}?form=${encodeJsonData(form)}`);
-    
+
     return { prompt, result: form };
   } catch (error) {
     log.error('Error generating form', { error });

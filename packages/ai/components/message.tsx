@@ -1,12 +1,21 @@
-import type { Message as MessageType } from 'ai';
+import type { UIMessage } from 'ai';
 import type { ComponentProps } from 'react';
 import Markdown from 'react-markdown';
 import { twMerge } from 'tailwind-merge';
 
 type MessageProps = {
-  data: MessageType;
+  data: UIMessage;
   markdown?: ComponentProps<typeof Markdown>;
 };
+
+function textFromUiMessage(message: UIMessage): string {
+  return message.parts
+    .filter(
+      (part): part is { type: 'text'; text: string } => part.type === 'text'
+    )
+    .map((part) => part.text)
+    .join('');
+}
 
 export const Message = ({ data, markdown }: MessageProps) => (
   <div
@@ -17,6 +26,6 @@ export const Message = ({ data, markdown }: MessageProps) => (
         : 'self-start bg-muted'
     )}
   >
-    <Markdown {...markdown}>{data.content}</Markdown>
+    <Markdown {...markdown}>{textFromUiMessage(data)}</Markdown>
   </div>
 );

@@ -20,6 +20,7 @@
     "@phosphor-icons/react": "^2.1.10",
     "@prisma/client": "6.2.1",
     "@radix-ui/react-dialog": "^1.1.4",
+    "@repo/ai": "workspace:^",
     "@repo/analytics": "workspace:*",
     "@repo/auth": "workspace:*",
     "@repo/collaboration": "workspace:*",
